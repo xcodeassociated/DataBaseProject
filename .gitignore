@@ -31,3 +31,7 @@
 *.pro.user
 .idea/*
 *.ui.autosave
+
+*/*.pro.user
+*/.idea/*
+*/*.ui.autosave
