@@ -10,7 +10,6 @@ set (CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu")
 find_package (Qt5Widgets)
 add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
 
-#set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -50,19 +49,3 @@ add_executable(${PROJECT_NAME} ${main_dir})
 target_link_libraries (${PROJECT_NAME}
         Controller
         Qt5::Widgets)
-
-#VirtualController
-#DataModelLib
-#AdminWindowLib
-#DoctorsWindowLib
-#LoginWindowLib
-#PRegWindowLib
-
-#target_link_libraries (${PROJECT_NAME} Controller)# Qt5::Widgets)
-#target_link_libraries (${PROJECT_NAME} DataModelLib)# Qt5::Widgets)
-#
-#target_link_libraries (${PROJECT_NAME} AdminWindowLib Qt5::Widgets)
-#target_link_libraries (${PROJECT_NAME} DoctorsWindowLib Qt5::Widgets)
-#target_link_libraries (${PROJECT_NAME} LoginWindowLib Qt5::Widgets)
-#target_link_libraries (${PROJECT_NAME} PRegWindowLib Qt5::Widgets)
-
