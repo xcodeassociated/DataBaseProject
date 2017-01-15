@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+*.pro.user
+.idea/*
+*.ui.autosave

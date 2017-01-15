@@ -1,0 +1,4 @@
+add_subdirectory(AdminWindow)
+add_subdirectory(DoctorsWindow)
+add_subdirectory(LoginWindow)
+add_subdirectory(PatientRegistrationWindow)

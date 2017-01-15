@@ -1,0 +1,30 @@
+Instrukcja:
+1.Aby uruchomić aplikację, należy wybrać plik "SysMed.exe".
+Pierwsze okno dostępne po uruchomieniu jest to okno logowania się do systemu. 
+
+2.Logowanie się do aplikacji:
+2.1. Panel rejestracji pacjentów:
+	login: r.login
+	hasło: rpass
+2.2 Panel lekarza:
+	login: d.login
+	hasło: dpass
+
+3.Zadania dla użytkownika:
+
+>Zadania 1-4 proponujemy wykonywać w kolejności, lub wybiórczo wedle uznania.
+>W zadaniu 5 i 6 dane wprowadzone w zadanich 1-4 nie będą widoczne.
+
+	1.Dodanie nowego pacjenta do systemu: W tym celu należy zalogować się do aplikacji jako rejestrator i zarejestrować pacjenta. Jeśli wprowadzono niezbędne dane, pojawi się komunikat o sukcesie.
+
+	2.Rejestracja wizyty lekarskiej: Logujemy się do aplikacji jako rejestrator, a następnie dokonujemy rejestracji. Jeśli wykonywaliśmy poprzednie zadanie, nowo utworzony użytkownik powinien być dostępny. Jeżeli wprowadzono dane poprawnie, ukaże się odpowiedni komunikat.
+
+	3.Edycja danych pacjenta: To zadanie jest również wykonywane z poziomu panelu rejestratora. Przechodząc do odpowiedniej zakładki interfejsu, wybieramy pacjenta, którego dane chcemy zmienić. Jeśli wprowadzone dane są poprawne, zobaczymy komunikat o poprawności i zatwierdzamy zmiany.
+
+	4.Edycja wizyty: Ponownie, aby wykonać to zadanie logujemy się jako rejestrator. Następnie, jeśli wykonaliśmy poprzednie zadania, powinniśmy mieć widoczną wprowadzoną wizytę. Jeśli nie rejestrowaliśmy wizyty, to należy najpierw ją dodać. Jeśli wszystko zostało wykonane poprawnie, zobaczymy stosowny komunikat.
+	
+	5.Dodanie informacji o badaniu lekarskim: Jeśli wykonywaliśmy któreś z zadań 1-4, to niezbędne jest wyłączenie aplikacji i ponowne zalogowanie po starcie, tym razem jako lekarz. Jeśli jesteśmy już w panelu lekarskim, możemy zacząć wprowadzać dane dotyczące wizyty, które zależą od nas. Po wprowadzeniu poprawnych danych i zatwierdzeniu, zobaczymy komunikat.
+
+	6.Tworzenie recepty: W tym zadaniu również musimy być zalogowani do panelu lekarskiego.
+Wybierając odpowiednią zakładkę interfejsu, tworzymy receptę dla danego pacjenta. Jeśli wszystko wprowadziliśmy poprawnie, zobaczymy okno informacyjne.
+
