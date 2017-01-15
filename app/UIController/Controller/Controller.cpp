@@ -8,16 +8,16 @@ Controller::Controller(){
 }
 
 Controller* Controller::instance(){
-    Controller::arc++;
     static Controller* instance_ptr = new Controller();
+    Controller::arc++;
     return instance_ptr;
 }
 
 Controller::~Controller(){
-    if (Controller::arc == 0){
+    Controller::arc--;
+    if (Controller::arc == 0) {
         //clean up code...
-    }else
-        Controller::arc--;
+    }
 }
 
 void Controller::showLogin() {
