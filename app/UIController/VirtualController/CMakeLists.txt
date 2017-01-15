@@ -4,7 +4,7 @@ set (VirtualControllerLibSRC
         VirtualController.cpp)
 
 set (VirtualControllerLibHPP
-        VirtualController.h)
+        VirtualController.hpp)
 
 qt5_wrap_cpp(VirtualControllerLibHPPwrapped ${VirtualControllerLibHPP})
 

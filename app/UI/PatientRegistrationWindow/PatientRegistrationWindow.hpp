@@ -9,7 +9,7 @@
 #include <cassert>
 #include <sstream>
 
-#include "VirtualController.h"
+#include "VirtualController.hpp"
 
 namespace Ui {
 class PatientRegistrationWindow;

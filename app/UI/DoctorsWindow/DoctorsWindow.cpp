@@ -1,4 +1,4 @@
-#include "DoctorsWindow.h"
+#include "DoctorsWindow.hpp"
 #include "ui_DoctorsWindow.h"
 
 DoctorsWindow::DoctorsWindow(QWidget *parent) :

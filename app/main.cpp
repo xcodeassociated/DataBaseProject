@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "Controller.h"
+#include "Controller.hpp"
 
 #include <iostream>
 

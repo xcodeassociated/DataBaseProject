@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "VirtualController.h"
+#include "VirtualController.hpp"
 
 #include <iostream>
 #include <string>
@@ -203,43 +203,6 @@ public:
     std::vector<exam> getExams(std::string&);
     PatientPrescription prescription;
     PatientExamResult examResults;
-};
-
-class LoginModel : public Model {
-public:
-    using Model::Model;
-    void checkLoginData(std::pair<std::string, std::string>&);
-    ~LoginModel() = default;
-};
-
-class RegistrationModel : public Model {
-public:
-    using Model::Model;
-    ~RegistrationModel() = default;
-    
-    bool addPatient(patient&, patient_medinfo_reg&);
-    bool addPatientExam(patient_id&, patient_exam_reg&);
-    bool editPatient(patient&, patient_medinfo_reg&);
-    bool editPatientExam(patient_id&, patient_exam_reg&, std::size_t);
-    bool deletePatient(patient_id&);
-    bool deleteExam(exam_id&);
-};
-
-class DoctorsModel : public Model{
-public:
-    using Model::Model;
-    ~DoctorsModel() = default;
-    
-    bool addPrescription(patient_id, doctor_id, date, std::vector<patient_prescription_element>&, std::string&);
-    bool addExam(patient_id, doctor_id, date, patient_symptoms, diagnosis, patient_medical_permit);
-};
-
-class AdminModel : public Model{
-public:
-    using Model::Model;
-    ~AdminModel() = default;
-    
-    std::string generateReport(ReportType, std::pair<std::string, std::string>, ReportFormat);
 };
 
 #endif // MODEL_H

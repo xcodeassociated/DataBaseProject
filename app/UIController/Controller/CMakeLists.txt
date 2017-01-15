@@ -1,7 +1,7 @@
 project(Controller)
 
 set (ControllerLibHPP
-        Controller.h)
+        Controller.hpp)
 
 set (ControllerLibSRC
         Controller.cpp)

@@ -1,58 +1,8 @@
-#include "Model.h"
+//
+// Created by jm on 15.01.17.
+//
 
-Model::Model(VirtualController *vc) : vController{vc}, patients{},
-                                      staff{}, pExams{}, pMedRecords{},
-                                      adresses{}, prescriptions{}, examsResults{} {
-    ;
-}
-Model::~Model() {
-    ;
-}
-
-Person::~Person() {
-    ;
-}
-
-patient Model::getPatient(patient_id& p_id) {
-    auto it = std::find_if(this->patients.begin(), this->patients.end(), [p_id](const Patient& p){
-        return p.id == p_id;
-    });
-    if (it != this->patients.end())
-        return *it;
-    else
-        return {};
-}
-
-std::vector<patient> Model::getPatients(std::string& query) {
-    if (query == "all"){
-        return this->patients;
-    }
-    return {};
-}
-
-std::vector<doctor> Model::getDoctors(std::string& query){
-    if (query == "all"){
-        return this->staff;
-    }else
-        return {};
-}
-
-doctor Model::getDoctor(doctor_id& d_id){
-    auto it = std::find_if(this->staff.doctors.begin(), this->staff.doctors.end(), [d_id](const Doctor& d){
-        return d_id == d.id;
-    });
-    if (it != this->staff.doctors.end())
-        return *it;
-    else
-        return {};
-}
-
-std::vector<exam> Model::getExams(std::string& query){
-    if (query == "all")
-        return this->pExams;
-    else
-        return {};
-}
+#include "RegistrationModel.hpp"
 
 bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
     std::size_t newIndex = this->patients.size();
@@ -131,33 +81,4 @@ bool RegistrationModel::editPatient(patient& p, patient_medinfo_reg& data){
         edit.address = {std::get<0>(adr), std::get<1>(adr), std::get<2>(adr), std::get<3>(adr), std::get<4>(adr)};
         return true;
     }
-}
-
-bool DoctorsModel::addPrescription(patient_id p_id, doctor_id d_id, date d, std::vector<patient_prescription_element>& pelem, std::string& other){
-    std::size_t  newId = this->prescriptions.size();
-    this->prescriptions.push_back({newId, p_id, d_id, d, pelem, other});
-    return true;
-}
-
-bool DoctorsModel::addExam(patient_id p_id, doctor_id d_id, date d, patient_symptoms s, diagnosis diag, patient_medical_permit permit){
-    std::size_t newId = this->examsResults.size();
-    this->examsResults.push_back({newId, p_id, d_id, d, s, diag, permit});
-    return true;
-}
-
-std::string AdminModel::generateReport(ReportType r_type, std::pair<std::string, std::string> time_peroid, ReportFormat r_format){
-    return {};
-}
-
-
-void LoginModel::checkLoginData(std::pair<std::string, std::string>& data){
-    // data check...
-    if (data.first == "r.login" && data.second == "rpass"){
-        this->vController->loginInfo(true, Window::PatientRegistrationWindow);
-    }else if (data.first == "d.login" && data.second == "dpass"){
-        this->vController->loginInfo(true, Window::DoctorsWindow);
-    }else if (data.first == "a.login" && data.second == "apass") {
-        this->vController->loginInfo(true, Window::AdminWindow);
-    }else
-        this->vController->loginInfo(false, Window::None);
 }

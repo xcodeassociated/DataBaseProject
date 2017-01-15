@@ -18,6 +18,13 @@ include_directories (${PROJECT_BINARY_DIR})
 link_directories (${PROJECT_SOURCE_DIR})
 
 include_directories( ${PROJECT_SOURCE_DIR}/Logic/UIDataModel )
+include_directories( ${PROJECT_SOURCE_DIR}/Logic/UIDataModel/Model )
+
+include_directories(${PROJECT_SOURCE_DIR}/Logic/UIDataModel/AdminModel)
+include_directories(${PROJECT_SOURCE_DIR}/Logic/UIDataModel/DoctorsModel)
+include_directories(${PROJECT_SOURCE_DIR}/Logic/UIDataModel/LoginModel)
+include_directories(${PROJECT_SOURCE_DIR}/Logic/UIDataModel/RegistrationModel)
+
 include_directories(${PROJECT_SOURCE_DIR}/UI/AdminWindow)
 include_directories(${PROJECT_SOURCE_DIR}/UI/DoctorsWindow)
 include_directories(${PROJECT_SOURCE_DIR}/UI/LoginWindow)

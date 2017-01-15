@@ -1,7 +1,7 @@
 project(PRegWindowLib)
 
 set (PRegWindowHPP
-        PatientRegistrationWindow.h)
+        PatientRegistrationWindow.hpp)
 
 set (PRegWindowSRC
         PatientRegistrationWindow.cpp)

@@ -1,4 +1,4 @@
-#include "AdminWindow.h"
+#include "AdminWindow.hpp"
 #include "ui_AdminWindow.h"
 
 AdminWindow::AdminWindow(QWidget *parent) :

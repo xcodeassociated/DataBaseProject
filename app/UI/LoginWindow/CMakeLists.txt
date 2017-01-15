@@ -1,7 +1,7 @@
 project(LoginWindowLib)
 
 set (LoginWindowHPP
-        LoginWindow.h)
+        LoginWindow.hpp)
 
 set (LoginWindowSRC
         LoginWindow.cpp)

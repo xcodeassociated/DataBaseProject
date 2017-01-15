@@ -2,7 +2,7 @@
 #define ADMINWINDOW_H
 
 #include <QDialog>
-#include "VirtualController.h"
+#include "VirtualController.hpp"
 
 namespace Ui {
 class AdminWindow;

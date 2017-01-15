@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QMessageBox>
-#include "VirtualController.h"
+#include "VirtualController.hpp"
 #include <iostream>
 #include <sstream>
 

@@ -1,12 +1,18 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "VirtualController.h"
-#include "Model.h"
-#include "LoginWindow.h"
-#include "PatientRegistrationWindow.h"
-#include "AdminWindow.h"
-#include "DoctorsWindow.h"
+#include "VirtualController.hpp"
+
+#include "Model.hpp"
+#include "AdminModel.hpp"
+#include "DoctorsModel.hpp"
+#include "LoginModel.hpp"
+#include "RegistrationModel.hpp"
+
+#include "LoginWindow.hpp"
+#include "PatientRegistrationWindow.hpp"
+#include "AdminWindow.hpp"
+#include "DoctorsWindow.hpp"
 
 #include <string>
 #include <QString>

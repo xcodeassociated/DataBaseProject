@@ -1,7 +1,7 @@
 project(DoctorsWindowLib)
 
 set (DoctorsWindowHPP
-        DoctorsWindow.h)
+        DoctorsWindow.hpp)
 
 set (DoctorsWindowSRC
         DoctorsWindow.cpp)

@@ -1,7 +1,7 @@
 project(AdminWindowLib)
 
 set (AdminWindowHPP
-        AdminWindow.h)
+        AdminWindow.hpp)
 
 set (AdminWindowSRC
         AdminWindow.cpp)

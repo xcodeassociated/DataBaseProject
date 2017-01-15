@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QObject>
-#include "VirtualController.h"
+#include "VirtualController.hpp"
 
 #include <string>
 #include <functional>
