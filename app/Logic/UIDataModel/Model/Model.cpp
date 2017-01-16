@@ -4,15 +4,15 @@ sql::Driver* Model::driver = get_driver_instance();
 sql::Connection* Model::connection = nullptr;
 std::size_t Model::arc = 0;
 
-Model::Model(VirtualController *vc) : vController{vc}, patients{},
+Model::Model(VirtualController *vc) throw(sql::SQLException) : vController{vc}, patients{},
                                       staff{}, pExams{}, pMedRecords{},
-                                      adresses{}, prescriptions{}, examsResults{}
+                                      adresses{}, prescriptions{}, examsResults{}, dbinfo{}
 {
     if (Model::arc == 0) {
-        this->connection = this->driver->connect("tcp://localhost:3306", "root", "root");
+        this->connection = this->driver->connect(dbinfo.address, dbinfo.log, dbinfo.pass);
         
         //may throw if db not found
-        this->connection->setSchema(this->db_name);
+        this->connection->setSchema(dbinfo.db_name);
     }
     
     Model::arc++;

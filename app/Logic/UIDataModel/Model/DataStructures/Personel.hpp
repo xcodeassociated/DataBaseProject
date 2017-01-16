@@ -10,8 +10,8 @@
 struct Personel : public Person {
     using Person::Person;
     enum class Position{
-        RECEPTION,
-        NURCE
+        RECEPTION = 0,
+        NURCE = 1
     };
     Position position;
     Personel(std::string name, std::string lastname, std::size_t id, std::size_t pesel, Position p) :

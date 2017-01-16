@@ -10,9 +10,9 @@
 struct Doctor : public Person {
     using Person::Person;
     enum class Title  {
-        LEKMED ,
-        DOCTOR,
-        PROF
+        LEKMED = 0,
+        DOCTOR = 1,
+        PROF = 2
     };
     Title title;
     Doctor(std::string name, std::string lastname, std::size_t id, std::size_t pesel, Title t) :

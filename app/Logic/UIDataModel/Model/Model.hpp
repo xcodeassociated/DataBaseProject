@@ -43,11 +43,18 @@ protected:
     static sql::Connection* connection;
     static std::size_t arc;
     
+    struct DBInfo {
+        const std::string db_name = "SysMed";
+        const std::string address = "tcp://localhost:3306";
+        const std::string log = "root";
+        const std::string pass = "root";
+    };
+    
+    DBInfo dbinfo;
+    
 public:
-    
-    std::string db_name = "SysMed";
-    
-    Model(VirtualController* vController);
+
+    Model(VirtualController* vController) throw(sql::SQLException);
     virtual ~Model();
     
     patient getPatient(patient_id&); // returns patient by id
