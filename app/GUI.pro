@@ -7,15 +7,16 @@ RC_FILE = GUI.rc
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14
-QMAKE_CXXFLAGS += -stdlib=libc++
+#QMAKE_CXXFLAGS += -stdlib=libc++
 
 CONFIG += no_keywords #static
+CONFIG += console # -= console <- no console
 
-linux64 {
+linux {
     LIBS += -L"/usr/lib" -lmysqlcppconn
 
     INCLUDEPATH += "/usr/include/" \
-                    "/usr/include/cppconn"
+                   "/usr/include/cppconn"
 }
 
 mac {
@@ -33,7 +34,7 @@ mac {
     LIBS += -L"/usr/local/Cellar/mysql-connector-c++/1.1.8/lib" -lmysqlcppconn
 
     INCLUDEPATH += "/usr/local/Cellar/mysql-connector-c++/1.1.8/include/" \
-                    "/usr/local/Cellar/mysql-connector-c++/1.1.8/include/cppconn"
+                   "/usr/local/Cellar/mysql-connector-c++/1.1.8/include/cppconn"
 
 }
 
