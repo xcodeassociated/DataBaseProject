@@ -1,0 +1,408 @@
+-- MySQL dump 10.13  Distrib 5.7.16, for Linux (x86_64)
+--
+-- Host: 127.0.0.1    Database: SysMed
+-- ------------------------------------------------------
+-- Server version	5.7.16-0ubuntu0.16.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `DoctorTitle`
+--
+
+DROP TABLE IF EXISTS `DoctorTitle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DoctorTitle` (
+  `id_title` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title_name` varchar(10) CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`id_title`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DoctorTitle`
+--
+
+LOCK TABLES `DoctorTitle` WRITE;
+/*!40000 ALTER TABLE `DoctorTitle` DISABLE KEYS */;
+INSERT INTO `DoctorTitle` VALUES (1,'lek.med'),(2,'dr'),(3,'prof.');
+/*!40000 ALTER TABLE `DoctorTitle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Doctors`
+--
+
+DROP TABLE IF EXISTS `Doctors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Doctors` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `lastname` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `pesel` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `title` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Doctors`
+--
+
+LOCK TABLES `Doctors` WRITE;
+/*!40000 ALTER TABLE `Doctors` DISABLE KEYS */;
+INSERT INTO `Doctors` VALUES (1,'Adam','Jankowski','857463748',0),(2,'Magdalena','Maj','232463467',1),(3,'Stefan','Gips','647364859',2);
+/*!40000 ALTER TABLE `Doctors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Login`
+--
+
+DROP TABLE IF EXISTS `Login`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Login` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_staff` int(10) unsigned DEFAULT NULL,
+  `id_doctor` int(10) unsigned DEFAULT NULL,
+  `login` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `pass` varchar(200) CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_staff` (`id_staff`),
+  KEY `id_doctor` (`id_doctor`),
+  CONSTRAINT `Login_ibfk_1` FOREIGN KEY (`id_staff`) REFERENCES `Staff` (`id`),
+  CONSTRAINT `Login_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `Doctors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Login`
+--
+
+LOCK TABLES `Login` WRITE;
+/*!40000 ALTER TABLE `Login` DISABLE KEYS */;
+INSERT INTO `Login` VALUES (1,1,NULL,'s.01','s1pass'),(2,2,NULL,'s.02','s2pass'),(3,NULL,1,'d.01','d1pass'),(4,NULL,2,'d.02','d2pass'),(5,NULL,3,'d.02','d3pass');
+/*!40000 ALTER TABLE `Login` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientExamDate`
+--
+
+DROP TABLE IF EXISTS `PatientExamDate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientExamDate` (
+  `id_patient_exam` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_patient` int(10) unsigned NOT NULL,
+  `id_doctor` int(10) unsigned NOT NULL,
+  `exam_date` datetime NOT NULL,
+  `other_examdate_info` text CHARACTER SET latin1,
+  PRIMARY KEY (`id_patient_exam`),
+  KEY `id_patient` (`id_patient`),
+  KEY `id_doctor` (`id_doctor`),
+  CONSTRAINT `PatientExamDate_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `Patients` (`id`),
+  CONSTRAINT `PatientExamDate_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `Doctors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientExamDate`
+--
+
+LOCK TABLES `PatientExamDate` WRITE;
+/*!40000 ALTER TABLE `PatientExamDate` DISABLE KEYS */;
+INSERT INTO `PatientExamDate` VALUES (1,1,3,'2017-01-29 14:00:00','info.... info...'),(2,2,1,'2017-01-28 11:30:00','info2.... info2...'),(3,3,2,'2017-01-29 09:15:00','info3.... info3...'),(4,3,3,'2017-01-30 13:20:00','info4.... info4...'),(5,1,3,'4031-01-29 00:00:00','info!.... info!...'),(6,8,3,'4026-01-01 00:00:00',''),(7,7,2,'4026-01-02 00:00:00',''),(8,2,3,'4025-01-01 00:00:00','');
+/*!40000 ALTER TABLE `PatientExamDate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientExamResult`
+--
+
+DROP TABLE IF EXISTS `PatientExamResult`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientExamResult` (
+  `id_exam_result` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_patient` int(10) unsigned NOT NULL,
+  `id_doctor` int(10) unsigned NOT NULL,
+  `exam_date` datetime NOT NULL,
+  `diagnosis` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `permit_type` int(10) unsigned DEFAULT NULL,
+  `permit_form` datetime DEFAULT NULL,
+  `permit_to` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_exam_result`),
+  KEY `id_patient` (`id_patient`),
+  KEY `id_doctor` (`id_doctor`),
+  CONSTRAINT `PatientExamResult_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `Patients` (`id`),
+  CONSTRAINT `PatientExamResult_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `Doctors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientExamResult`
+--
+
+LOCK TABLES `PatientExamResult` WRITE;
+/*!40000 ALTER TABLE `PatientExamResult` DISABLE KEYS */;
+INSERT INTO `PatientExamResult` VALUES (1,1,3,'2016-12-30 16:00:00','diagnoza1',0,'2016-12-30 00:00:00','2017-01-10 00:00:00'),(2,3,2,'2017-01-10 11:50:00','diagnoza2',1,'2017-01-10 00:00:00','2017-01-17 00:00:00'),(3,2,2,'2017-01-04 15:20:00','diagnoza3',0,'2017-01-04 00:00:00','2017-01-21 00:00:00'),(4,1,1,'2017-01-03 12:00:00','diagnoza4',1,'2017-01-03 00:00:00','2017-01-12 00:00:00');
+/*!40000 ALTER TABLE `PatientExamResult` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientExamResultSymptoms`
+--
+
+DROP TABLE IF EXISTS `PatientExamResultSymptoms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientExamResultSymptoms` (
+  `id_exam_symptom` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_exam` int(10) unsigned NOT NULL,
+  `symptom` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `symptom_description` text CHARACTER SET latin1,
+  PRIMARY KEY (`id_exam_symptom`),
+  KEY `id_exam` (`id_exam`),
+  CONSTRAINT `PatientExamResultSymptoms_ibfk_1` FOREIGN KEY (`id_exam`) REFERENCES `PatientExamResult` (`id_exam_result`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientExamResultSymptoms`
+--
+
+LOCK TABLES `PatientExamResultSymptoms` WRITE;
+/*!40000 ALTER TABLE `PatientExamResultSymptoms` DISABLE KEYS */;
+INSERT INTO `PatientExamResultSymptoms` VALUES (1,1,'sympotm1','opis sympotmu1'),(2,2,'sympotm2','opis sympotmu2'),(3,2,'sympotm3','opis sympotmu3'),(4,3,'sympotm4','opis sympotmu4'),(5,3,'sympotm5','opis sympotmu5'),(6,3,'sympotm6','opis sympotmu6'),(7,4,'sympotm7','opis sympotmu7');
+/*!40000 ALTER TABLE `PatientExamResultSymptoms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientMedicalInfo`
+--
+
+DROP TABLE IF EXISTS `PatientMedicalInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientMedicalInfo` (
+  `id_medinfo` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_patient` int(10) unsigned NOT NULL,
+  `disease_date` datetime NOT NULL,
+  `disease_type` varchar(120) CHARACTER SET latin1 NOT NULL,
+  `disease_other_info` text CHARACTER SET latin1,
+  PRIMARY KEY (`id_medinfo`),
+  UNIQUE KEY `id_medinfo_UNIQUE` (`id_medinfo`),
+  KEY `id_patient` (`id_patient`),
+  CONSTRAINT `PatientMedicalInfo_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `Patients` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientMedicalInfo`
+--
+
+LOCK TABLES `PatientMedicalInfo` WRITE;
+/*!40000 ALTER TABLE `PatientMedicalInfo` DISABLE KEYS */;
+INSERT INTO `PatientMedicalInfo` VALUES (1,1,'2016-12-07 00:00:00','Choroba1','Choroba1 info...'),(2,1,'2016-12-20 00:00:00','Choroba2','Choroba2 info...'),(3,2,'2016-12-20 00:00:00','Choroba3','Choroba3 info...'),(4,3,'2016-11-21 00:00:00','Choroba4','Choroba4 info...'),(5,1,'2017-01-20 00:00:00','Choroba5','Choroba5 info...'),(6,4,'2017-01-05 00:00:00','Choroba6','Choroba6 info...'),(7,2,'2017-01-02 00:00:00','Choroba7','Choroba7 info...'),(8,2,'2016-12-29 00:00:00','Choroba8','Choroba8 info...'),(9,6,'2017-01-10 00:00:00','test','test opis'),(10,7,'2017-01-10 00:00:00','test','test o'),(11,8,'2017-01-10 00:00:00','test','t');
+/*!40000 ALTER TABLE `PatientMedicalInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientPrescription`
+--
+
+DROP TABLE IF EXISTS `PatientPrescription`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientPrescription` (
+  `id_prescription` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_patient` int(10) unsigned NOT NULL,
+  `id_doctor` int(10) unsigned NOT NULL,
+  `prescription_date` datetime NOT NULL,
+  `prescription_other_info` text CHARACTER SET latin1,
+  PRIMARY KEY (`id_prescription`),
+  KEY `id_patient` (`id_patient`),
+  KEY `id_doctor` (`id_doctor`),
+  CONSTRAINT `PatientPrescription_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `Patients` (`id`),
+  CONSTRAINT `PatientPrescription_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `Doctors` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientPrescription`
+--
+
+LOCK TABLES `PatientPrescription` WRITE;
+/*!40000 ALTER TABLE `PatientPrescription` DISABLE KEYS */;
+INSERT INTO `PatientPrescription` VALUES (1,1,3,'2016-12-30 16:00:00','info1...'),(2,3,2,'2017-01-10 11:50:00','info2...'),(3,2,2,'2017-01-04 15:20:00','info3...'),(4,2,2,'2017-01-04 15:20:00','info4...');
+/*!40000 ALTER TABLE `PatientPrescription` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PatientPrescriptionElement`
+--
+
+DROP TABLE IF EXISTS `PatientPrescriptionElement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PatientPrescriptionElement` (
+  `id_prescription_element` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_prescription` int(10) unsigned NOT NULL,
+  `prescription_element` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `prescription_element_dose` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `prescription_element_info` text CHARACTER SET latin1,
+  PRIMARY KEY (`id_prescription_element`),
+  KEY `id_prescription` (`id_prescription`),
+  CONSTRAINT `PatientPrescriptionElement_ibfk_1` FOREIGN KEY (`id_prescription`) REFERENCES `PatientPrescription` (`id_prescription`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PatientPrescriptionElement`
+--
+
+LOCK TABLES `PatientPrescriptionElement` WRITE;
+/*!40000 ALTER TABLE `PatientPrescriptionElement` DISABLE KEYS */;
+INSERT INTO `PatientPrescriptionElement` VALUES (1,1,'lek1','dawka...','info...'),(2,1,'lek2','dawka...','info...'),(3,2,'lek3','dawka...','info...'),(4,3,'lek4','dawka...','info...'),(5,3,'lek5','dawka...','info...'),(6,4,'lek6','dawka...','info...');
+/*!40000 ALTER TABLE `PatientPrescriptionElement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Patients`
+--
+
+DROP TABLE IF EXISTS `Patients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Patients` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `lastname` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `pesel` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Patients`
+--
+
+LOCK TABLES `Patients` WRITE;
+/*!40000 ALTER TABLE `Patients` DISABLE KEYS */;
+INSERT INTO `Patients` VALUES (1,'Jan','kowalski','773849234'),(2,'Anna','Nowak','647873892'),(3,'Mateusz','Nowicki','848920342'),(4,'Marta','Kruk','940384829'),(5,'qweqwe','weqwe','0'),(6,'Marek','Nowy','56453234123'),(7,'adsf','dfsa','32333333333'),(8,'qqqqq','wwww','44444444444');
+/*!40000 ALTER TABLE `Patients` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PersonAddress`
+--
+
+DROP TABLE IF EXISTS `PersonAddress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PersonAddress` (
+  `id_address` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_patient` int(10) unsigned DEFAULT NULL,
+  `id_doctor` int(10) unsigned DEFAULT NULL,
+  `id_staff` int(10) unsigned DEFAULT NULL,
+  `city` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `street` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `house_nr` int(10) unsigned NOT NULL,
+  `flat_nr` int(10) unsigned DEFAULT NULL,
+  `postal_code` varchar(12) CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`id_address`),
+  UNIQUE KEY `id_address_UNIQUE` (`id_address`),
+  KEY `id_patient` (`id_patient`),
+  KEY `id_doctor` (`id_doctor`),
+  KEY `id_staff` (`id_staff`),
+  CONSTRAINT `PersonAddress_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `Patients` (`id`),
+  CONSTRAINT `PersonAddress_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `Doctors` (`id`),
+  CONSTRAINT `PersonAddress_ibfk_3` FOREIGN KEY (`id_staff`) REFERENCES `Staff` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PersonAddress`
+--
+
+LOCK TABLES `PersonAddress` WRITE;
+/*!40000 ALTER TABLE `PersonAddress` DISABLE KEYS */;
+INSERT INTO `PersonAddress` VALUES (1,1,NULL,NULL,'Krakow','Kwiatowa',10,11,'30-380'),(2,2,NULL,NULL,'Krakow','Bracka',5,6,'31-384'),(3,3,NULL,NULL,'Krakow','Szewska',4,89,'31-351'),(4,4,NULL,NULL,'Krakow','Dietla',9,11,'32-377'),(5,NULL,1,NULL,'Krakow','Mozarta',120,121,'30-390'),(6,NULL,2,NULL,'Krakow','Filipa',6,NULL,'30-385'),(7,NULL,3,NULL,'Krakow','Podwale',17,13,'30-380'),(8,NULL,NULL,1,'Krakow','Bochnia',10,NULL,'30-342'),(9,NULL,NULL,2,'Krakow','Zielinska',77,90,'30-380'),(10,6,NULL,NULL,'Karkow','Nowa',11,12,'30-300'),(11,7,NULL,NULL,'ewwerr','werwer',32,NULL,'33-333'),(12,8,NULL,NULL,'werer','werwe',33,2,'33-333');
+/*!40000 ALTER TABLE `PersonAddress` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Staff`
+--
+
+DROP TABLE IF EXISTS `Staff`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Staff` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `lastname` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `pesel` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `position` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Staff`
+--
+
+LOCK TABLES `Staff` WRITE;
+/*!40000 ALTER TABLE `Staff` DISABLE KEYS */;
+INSERT INTO `Staff` VALUES (1,'Maria','Dorowska','885937283',0),(2,'Joanna','Opikela','694038495',1);
+/*!40000 ALTER TABLE `Staff` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `StaffPosition`
+--
+
+DROP TABLE IF EXISTS `StaffPosition`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `StaffPosition` (
+  `id_position` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `position_name` varchar(10) CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`id_position`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `StaffPosition`
+--
+
+LOCK TABLES `StaffPosition` WRITE;
+/*!40000 ALTER TABLE `StaffPosition` DISABLE KEYS */;
+INSERT INTO `StaffPosition` VALUES (1,'RECEPTION'),(2,'NURCE');
+/*!40000 ALTER TABLE `StaffPosition` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-01-17 17:05:46

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>99ef2ec1-ed50-4026-b7cc-4e082fb391ba</OriginalElement>
+  <nodes>
+    <node x="1145.5" y="540.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescriptionElement</node>
+    <node x="1180.0" y="290.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescription</node>
+    <node x="720.0" y="12.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients</node>
+    <node x="764.5" y="552.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResultSymptoms</node>
+    <node x="1980.0" y="290.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Login</node>
+    <node x="0.0" y="737.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.StaffPosition</node>
+    <node x="736.0" y="254.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResult</node>
+    <node x="348.0" y="290.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamDate</node>
+    <node x="312.0" y="737.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.DoctorTitle</node>
+    <node x="1556.0" y="242.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PersonAddress</node>
+    <node x="1316.5" y="0.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors</node>
+    <node x="1944.014393939394" y="0.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Staff</node>
+    <node x="0.0" y="290.0">99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientMedicalInfo</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResult" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors">
+      <point x="104.5" y="-112.0" />
+      <point x="1049.5" y="222.0" />
+      <point x="1394.8" y="222.0" />
+      <point x="-52.200000000000045" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientMedicalInfo" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients">
+      <point x="0.0" y="-76.0" />
+      <point x="164.0" y="192.0" />
+      <point x="744.1" y="192.0" />
+      <point x="-96.39999999999998" y="64.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescription" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients">
+      <point x="-89.0" y="-76.0" />
+      <point x="1269.0" y="202.0" />
+      <point x="888.7" y="202.0" />
+      <point x="48.200000000000045" y="64.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResult" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients">
+      <point x="-104.5" y="-112.0" />
+      <point x="0.0" y="64.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PersonAddress" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors">
+      <point x="0.0" y="-124.0" />
+      <point x="1758.0" y="182.0" />
+      <point x="1499.2" y="182.0" />
+      <point x="52.200000000000045" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Login" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Staff">
+      <point x="65.25" y="-76.0" />
+      <point x="2175.75" y="222.0" />
+      <point x="2139.764393939394" y="222.0" />
+      <point x="65.25" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PersonAddress" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Staff">
+      <point x="134.66666666666674" y="-124.0" />
+      <point x="1892.6666666666667" y="222.0" />
+      <point x="2009.264393939394" y="222.0" />
+      <point x="-65.25" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescriptionElement" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescription">
+      <point x="0.0" y="-76.0" />
+      <point x="0.0" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Login" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors">
+      <point x="-65.25" y="-76.0" />
+      <point x="2045.25" y="172.0" />
+      <point x="1551.4" y="172.0" />
+      <point x="104.40000000000009" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamDate" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients">
+      <point x="-92.0" y="-76.0" />
+      <point x="440.0" y="202.0" />
+      <point x="792.3" y="202.0" />
+      <point x="-48.200000000000045" y="64.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamDate" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors">
+      <point x="92.0" y="-76.0" />
+      <point x="624.0" y="212.0" />
+      <point x="1342.6" y="212.0" />
+      <point x="-104.40000000000009" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientPrescription" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Doctors">
+      <point x="89.0" y="-76.0" />
+      <point x="0.0" y="76.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResultSymptoms" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientExamResult">
+      <point x="0.0" y="-64.0" />
+      <point x="0.0" y="112.0" />
+    </edge>
+    <edge source="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PersonAddress" target="99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.Patients">
+      <point x="-134.66666666666652" y="-124.0" />
+      <point x="1623.3333333333335" y="192.0" />
+      <point x="936.9" y="192.0" />
+      <point x="96.39999999999998" y="64.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4639540026536931" x="1120.5" y="408.5" />
+  <SelectedNodes>
+    <node>99ef2ec1-ed50-4026-b7cc-4e082fb391ba.TABLE:SysMed.PatientMedicalInfo</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
