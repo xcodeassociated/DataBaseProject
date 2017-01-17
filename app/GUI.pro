@@ -7,7 +7,6 @@ RC_FILE = GUI.rc
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14
-#QMAKE_CXXFLAGS += -stdlib=libc++
 
 CONFIG += no_keywords #static
 CONFIG += console # -= console <- no console
@@ -20,6 +19,8 @@ linux {
 }
 
 mac {
+    QMAKE_CXXFLAGS += -stdlib=libc++
+
     _BOOST_PATH = /usr/local/boost
 
     INCLUDEPATH += "$${_BOOST_PATH}/include"

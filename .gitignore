@@ -35,3 +35,5 @@
 */*.pro.user
 */.idea/*
 */*.ui.autosave
+
+build-GUI*
