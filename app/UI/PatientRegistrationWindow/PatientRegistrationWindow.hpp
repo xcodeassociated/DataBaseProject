@@ -42,10 +42,13 @@ private:
     
     void fillPatientsList();
     void cleanPatientList();
+    
     void updateDoctors();
     void updatePatients();
     void updateExams();
     void fillExamsList();
+    void fillEditMedInfoTable();
+    
     void cleanSelectors();
     
     enum class CurrentTab{
@@ -60,22 +63,23 @@ private:
 private Q_SLOTS:
     void tabChange();
     
-    void addPatientToSystem();
     void cleanPatientRegUi();
+    void cleanExamRegUI();
+    void cleanEditPatientUI();
+    void cleanExamEditUI();
+    
+    void addPatientToSystem();
     void addNewMedInfoRow();
     void removeMedInfoRow();
     void deletePatient();
     
     void addExamToSystem();
-    void cleanExamRegUI();
     
     void editPatientInSystem();
-    void revertEditPatient();
     void addNewEditMedRow();
     void removeEditMedRow();
     
     void editExamInSystem();
-    void revertExamEdit();
     void deleteExam();
     
     void selectPatientInList();

@@ -11,6 +11,8 @@ class LoginModel : public Model {
 public:
     using Model::Model;
     void checkLoginData(std::pair<std::string, std::string>&);
+    virtual void update_data() override;
+   
     ~LoginModel() = default;
 };
 

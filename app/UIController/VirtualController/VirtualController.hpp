@@ -11,8 +11,8 @@
 #include <QString>
 
 enum class PermitType {
-    NORMAL,
-    L4
+    NORMAL = 0,
+    L4 = 1
 };
 
 enum class Window{
@@ -40,7 +40,8 @@ using diagnosis = std::string;
 using pesel = std::size_t;
 using patient_adr = std::tuple<std::string, std::string, std::string, std::string, std::string>;
 using patient = std::tuple<std::string, std::string, std::size_t, pesel, patient_adr>;
-using patient_medinfo_reg = std::vector<std::tuple<std::string, std::string, std::string>>;
+using patient_med_record = std::tuple<std::string, std::string, std::string>;
+using patient_medinfo_reg = std::vector<patient_med_record>;
 using patient_exam_reg = std::tuple<doctor_id, std::string, std::string, std::string>;
 using patient_symptoms = std::vector<std::pair<std::string, std::string>>;
 using patient_medical_permit = std::tuple<PermitType, date, date>;
@@ -71,6 +72,7 @@ public:
     
     virtual patient getPatient(patient_id&) = 0; // returns patient by id
     virtual std::vector<patient> getPatients(std::string&) = 0; // returns patients by at last one patient data
+    virtual patient_medinfo_reg getPatientMedInfo(patient_id&) = 0;
     virtual std::vector<doctor> getDoctors(std::string&) = 0;
     virtual doctor getDoctor(doctor_id&) = 0;
     virtual std::vector<exam> getExams(std::string&) = 0;

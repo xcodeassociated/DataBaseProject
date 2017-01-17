@@ -13,6 +13,8 @@ public:
     ~AdminModel() = default;
     
     std::string generateReport(ReportType, std::pair<std::string, std::string>, ReportFormat);
+    
+    virtual void update_data() override;
 };
 
 

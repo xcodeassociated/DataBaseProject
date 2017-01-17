@@ -53,6 +53,7 @@ public:
     
     virtual patient getPatient(patient_id&) override; // returns patient by id
     virtual std::vector<patient> getPatients(std::string&) override; // returns patients by at last one patient data
+    virtual patient_medinfo_reg getPatientMedInfo(patient_id&) override;
     virtual std::vector<doctor> getDoctors(std::string&) override;
     virtual doctor getDoctor(doctor_id&) override;
     virtual std::vector<exam> getExams(std::string&) override;

@@ -29,10 +29,16 @@ struct Patient : public Person {
 };
 
 struct PatientMedicalInfo {
+    std::size_t medinfo_id = 0;
     std::size_t patient_id = 0;
     std::string disease_date = "",
             disease_type = "",
             disease_other_info = "";
+    
+    //TODO! patient_med_record has to store all the values!
+    operator std::tuple<std::string, std::string, std::string>() const {
+        return std::make_tuple(this->disease_date, this->disease_type, this->disease_other_info);
+    }
 };
 
 struct PatientExamDate {
@@ -68,16 +74,7 @@ struct PatientPrescription{
 };
 
 struct Patients : std::vector<Patient> {
-    Patients () {
-        std::vector<Patient> data = {
-                {{"Jan", "kowalski", 100, 773849234}, std::make_tuple("Krakow", "Kwiatowa", "10", "11", "30-380")},
-                {{"Anna", "Nowak", 101, 647873892}, std::make_tuple("Krakow", "Bracka", "5", "6", "31-384")},
-                {{"Mateusz", "Nowicki", 102, 848920342}, std::make_tuple("Krakow", "Szewska", "4", "89", "31-351")},
-                {{"Marta", "Kruk", 103, 940384829}, std::make_tuple("Krakow", "Dietla", "9", "11", "32-377")} };
-        
-        for (auto e : data)
-            this->push_back(e);
-    }
+    Patients () = default;
     
     operator std::vector<patient>() const {
         std::vector<patient> data{};

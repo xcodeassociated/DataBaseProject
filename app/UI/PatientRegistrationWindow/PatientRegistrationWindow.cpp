@@ -21,11 +21,11 @@ PatientRegistrationWindow::PatientRegistrationWindow(QWidget *parent) :
     connect(this->ui->visitAccept, SIGNAL(clicked()), this, SLOT(addExamToSystem()));
     connect(this->ui->visitClear, SIGNAL(clicked()), this, SLOT(cleanExamRegUI()));
     connect(this->ui->editAccept, SIGNAL(clicked()), this, SLOT(editPatientInSystem()));
-    connect(this->ui->editClear, SIGNAL(clicked()), this, SLOT(revertEditPatient()));
+    connect(this->ui->editClear, SIGNAL(clicked()), this, SLOT(cleanEditPatientUI()));
     connect(this->ui->addMedRowEdit, SIGNAL(clicked()), this, SLOT(addNewEditMedRow()));
     connect(this->ui->removeRowEdit, SIGNAL(clicked()), this, SLOT(removeEditMedRow()));
     connect(this->ui->visitAccept_2, SIGNAL(clicked()), this, SLOT(editExamInSystem()));
-    connect(this->ui->visitClear_2, SIGNAL(clicked()), this, SLOT(revertExamEdit()));
+    connect(this->ui->visitClear_2, SIGNAL(clicked()), this, SLOT(cleanExamEditUI()));
     connect(this->ui->removePatientButton, SIGNAL(clicked()), this, SLOT(deletePatient()));
     connect(this->ui->removeExamButton, SIGNAL(clicked()), this, SLOT(deleteExam()));
     
@@ -125,6 +125,7 @@ void PatientRegistrationWindow::cleanPatientRegUi(){
     this->ui->flatNumberInput->clear();
     this->ui->postalCodeInput->clear();
     this->ui->medicTable->clear();
+    this->ui->medicTable->setHorizontalHeaderLabels({"Data", "Choroba", "Inne"});
     
     this->current_editing_exam = -1;
     this->current_editing_patient = -1;
@@ -141,8 +142,8 @@ void PatientRegistrationWindow::addExamToSystem(){
     std::cerr << "doctor: " << std::get<0>(this->doctors[dSelIndex]) << " " << std::get<1>(this->doctors[dSelIndex]) <<" index: " << d_id << "\n";
     
     std::string date, time;
-    date = this->ui->dateEdit->date().toString("dd.MM.yyyy").toStdString();
-    time = this->ui->timeEdit->time().toString("HH.mm").toStdString();
+    date = this->ui->dateEdit->date().toString("yyyy-MM-dd").toStdString();
+    time = this->ui->timeEdit->time().toString("HH:mm:ss").toStdString();
     
     std::cerr << "date: " << date << " time: " << time;
     patient_exam_reg e = std::make_tuple(d_id, date, time, this->ui->visiOther->toPlainText().toStdString());
@@ -284,7 +285,7 @@ void PatientRegistrationWindow::deleteExam(){
 }
 
 
-void PatientRegistrationWindow::revertEditPatient(){
+void PatientRegistrationWindow::cleanEditPatientUI(){
     this->ui->patientList->clearSelection();
     this->ui->nameEdit->clear();
     this->ui->surnameEdit->clear();
@@ -293,6 +294,9 @@ void PatientRegistrationWindow::revertEditPatient(){
     this->ui->houseNumberEdit->clear();
     this->ui->flatNumberEdit->clear();
     this->ui->postalCodeEdit->clear();
+    
+    this->ui->medicTableEdit->clear();
+    this->ui->medicTableEdit->setHorizontalHeaderLabels({"Data", "Choroba", "Inne"});
     
     this->current_editing_exam = -1;
     this->current_editing_patient = -1;
@@ -337,7 +341,7 @@ void PatientRegistrationWindow::editExamInSystem(){
     time = this->ui->timeEdit_2->time().toString("HH.mm").toStdString();
     
     std::cerr << "date: " << date << " time: " << time;
-    patient_exam_reg e = std::make_tuple(d_id, date, time, this->ui->visiOther->toPlainText().toStdString());
+    patient_exam_reg e = std::make_tuple(d_id, date, time, this->ui->visiOther_2->toPlainText().toStdString());
     
     std::stringstream msg, msg_h;
     msg << "Dokonać edycji terminu wizyty pacjenta: " << std::get<0>(this->patients[pSelIndex]) << " " << std::get<1>(this->patients[pSelIndex]) << "?";
@@ -356,7 +360,7 @@ void PatientRegistrationWindow::editExamInSystem(){
     }
 }
 
-void PatientRegistrationWindow::revertExamEdit(){
+void PatientRegistrationWindow::cleanExamEditUI(){
     this->ui->patientList->clearSelection();
     this->ui->visiOther_2->clear();
     this->ui->dateEdit_2->setDate(QDate::currentDate());
@@ -372,9 +376,10 @@ void PatientRegistrationWindow::selectPatientInList(){
     
     if (this->currentTab == CurrentTab::P_EDIT_TAB) {
         QListWidgetItemBundle *selected_item = static_cast<QListWidgetItemBundle *>(this->ui->patientList->selectedItems().back());
-        std::cerr << "selected: " << selected_item->text().toStdString() << " id: " << selected_item->id << "\n";
-        this->current_editing_patient = selected_item->id;
-        patient selected_patient = this->vc->getPatient(selected_item->id);
+        auto patient_id = selected_item->id;
+        std::cerr << "selected: " << selected_item->text().toStdString() << " id: " << patient_id << "\n";
+        this->current_editing_patient = patient_id;
+        patient selected_patient = this->vc->getPatient(patient_id);
         
         this->ui->nameEdit->setText({std::get<0>(selected_patient).c_str()});
         this->ui->surnameEdit->setText({std::get<1>(selected_patient).c_str()});
@@ -384,12 +389,38 @@ void PatientRegistrationWindow::selectPatientInList(){
         this->ui->houseNumberEdit->setText(std::get<2>(std::get<4>(selected_patient)).c_str());
         this->ui->flatNumberEdit->setText(std::get<3>(std::get<4>(selected_patient)).c_str());
         this->ui->postalCodeEdit->setText(std::get<4>(std::get<4>(selected_patient)).c_str());
-    
-    
+        
+        patient_medinfo_reg medinfo = this->vc->getPatientMedInfo(patient_id);
+        std::cerr << "medinfo count: " << medinfo.size() << "\n";
+        this->ui->medicTableEdit->setRowCount(medinfo.size());
+        
+        int i = 0;
+        for (patient_med_record& elem : medinfo){
+            std::vector<std::string> text{};
+            
+            text.push_back(std::get<0>(elem));
+            text.push_back(std::get<1>(elem));
+            text.push_back(std::get<2>(elem));
+            
+            for (int j = 0; j < 3; j++){
+                //i hope that clear in tablewidget delets heap memory for items
+                QTableWidgetItem *newItem = new QTableWidgetItem(text[j].c_str());
+                this->ui->medicTableEdit->setItem(i, j, newItem);
+            }
+            i++;
+        }
+        
     }else if (this->currentTab == CurrentTab::E_EDIT_TAB){
         QListWidgetItemBundle *selected_item = static_cast<QListWidgetItemBundle *>(this->ui->patientList->selectedItems().back());
-        std::cerr << "exam id: " << selected_item->id << "\n";
-        this->current_editing_exam = selected_item->id;
+        auto exam_id = selected_item->id;
+        std::cerr << "exam id: " << exam_id << "\n";
+        this->current_editing_exam = exam_id;
+        
+        const exam& e = *std::find_if(this->exams.begin(), this->exams.end(), [exam_id](const exam& elem){
+            return std::get<5>(elem) == exam_id;
+        });
+        
+        this->ui->visiOther_2->document()->setPlainText({std::get<4>(e).c_str()});
     }
 }
 
@@ -429,23 +460,6 @@ void PatientRegistrationWindow::cleanSelectors(){
     this->ui->selectDoctor_2->clear();
 }
 
-void PatientRegistrationWindow::fillExamsList(){
-    if (!this->exams.empty()){
-        for (auto e : this->exams){
-            patient p = this->vc->getPatient(std::get<0>(e));
-            doctor_id d_id = std::get<1>(e);
-            doctor d = this->vc->getDoctor(d_id);
-            std::string p_str = std::get<0>(p) + " " + std::get<1>(p) + " -> " + std::get<0>(d) + " " + std::get<1>(d);
-            QListWidgetItemBundle* item = new QListWidgetItemBundle;
-            item->id = std::get<5>(e); //exam id
-            item->setText(QString(p_str.c_str()));
-            this->ui->patientList->addItem(item);
-            this->examListElements.push_back(item);
-        }
-    }else
-        std::cerr << "empty exams!" << "\n";
-}
-
 void PatientRegistrationWindow::updatePatients(){
     std::string query = "all";
     this->patients = this->vc->getPatients(query);
@@ -472,6 +486,27 @@ void PatientRegistrationWindow::fillPatientsList() {
     }
 }
 
+void PatientRegistrationWindow::fillExamsList(){
+    if (!this->exams.empty()){
+        for (auto e : this->exams){
+            patient p = this->vc->getPatient(std::get<0>(e));
+            doctor_id d_id = std::get<1>(e);
+            doctor d = this->vc->getDoctor(d_id);
+            std::string p_str = std::get<0>(p) + " " + std::get<1>(p) + " -> " + std::get<0>(d) + " " + std::get<1>(d);
+            QListWidgetItemBundle* item = new QListWidgetItemBundle;
+            item->id = std::get<5>(e); //exam id
+            item->setText(QString(p_str.c_str()));
+            this->ui->patientList->addItem(item);
+            this->examListElements.push_back(item);
+        }
+    }else
+        std::cerr << "empty exams!" << "\n";
+}
+
+void PatientRegistrationWindow::fillEditMedInfoTable(){
+    
+}
+
 void PatientRegistrationWindow::setup_view() {
     this->cleanSelectors();
     this->cleanPatientList();
@@ -482,6 +517,7 @@ void PatientRegistrationWindow::setup_view() {
         case CurrentTab::P_REG_TAB:
             this->ui->patientList->setEnabled(true);
             this->ui->infoBox->setText({"Pacjent:"});
+            this->cleanPatientRegUi();
             this->updatePatients();
             this->fillPatientsList();
             break;
@@ -491,6 +527,7 @@ void PatientRegistrationWindow::setup_view() {
             
             this->ui->patientList->setEnabled(true);
             this->ui->infoBox->setText({"Wizyta:"});
+            this->cleanExamRegUI();
             this->updatePatients();
             this->updateDoctors();
             this->updateExams();
@@ -520,14 +557,17 @@ void PatientRegistrationWindow::setup_view() {
         case CurrentTab::P_EDIT_TAB:
             this->ui->patientList->setEnabled(true);
             this->ui->infoBox->setText({"Pacjent:"});
+            this->cleanEditPatientUI();
             this->updatePatients();
             this->fillPatientsList();
+            this->fillEditMedInfoTable();
             
             break;
     
         case CurrentTab::E_EDIT_TAB:
             this->ui->patientList->setEnabled(true);
             this->ui->infoBox->setText({"Wizyta:"});
+            this->cleanExamEditUI();
             this->updatePatients();
             this->updateDoctors();
             this->updateExams();

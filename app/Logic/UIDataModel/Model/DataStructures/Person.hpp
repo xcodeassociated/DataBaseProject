@@ -13,6 +13,7 @@ struct Person {
     Person(std::string name, std::string lastname, std::size_t id, std::size_t pesel) :
             name{name}, lastname{lastname}, id{id}, pesel{pesel}
     { ; }
+    Person () = default;
     virtual ~Person();
     
 };

@@ -18,6 +18,9 @@ public:
     bool editPatientExam(patient_id&, patient_exam_reg&, std::size_t);
     bool deletePatient(patient_id&);
     bool deleteExam(exam_id&);
+    
+    virtual void update_data() override;
+    
 };
 
 #endif //SYSMED_REGISTRATIONMODEL_HPP

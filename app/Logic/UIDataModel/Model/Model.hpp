@@ -10,6 +10,7 @@
 #include <tuple>
 #include <utility>
 #include <memory>
+#include <sstream>
 
 #include "Doctor.hpp"
 #include "Patient.hpp"
@@ -22,11 +23,12 @@
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/datatype.h>
 
 using PatientsMedicalRecords = std::vector<PatientMedicalInfo>;
 using PatientsPrescriptions = std::vector<PatientPrescription>;
 using PatientsExamsResults = std::vector<PatientExamResult>;
-using Persons_Adresses = std::vector<person_addess>;
 
 class Model{
 protected:
@@ -35,7 +37,6 @@ protected:
     Staff staff;
     PatientsExams pExams;
     PatientsMedicalRecords pMedRecords;
-    Persons_Adresses adresses;
     PatientsPrescriptions prescriptions;
     PatientsExamsResults examsResults;
     
@@ -52,6 +53,26 @@ protected:
     
     DBInfo dbinfo;
     
+    enum class OwnerType{
+        None = 0,
+        Staff = 1,
+        Doctor = 2,
+        Admin = 3
+    };
+    
+    static Person owner;
+    static OwnerType ownerType;
+    
+    virtual void update_data() = 0;
+    void create_snapshot();
+    void commit();
+    void update_patients();
+    void update_staff();
+    void update_pexams();
+    void update_pmedrecords();
+    void update_pprescriptions();
+    void update_pexamresults();
+    
 public:
 
     Model(VirtualController* vController) throw(sql::SQLException);
@@ -59,11 +80,11 @@ public:
     
     patient getPatient(patient_id&); // returns patient by id
     std::vector<patient> getPatients(std::string&); // returns patients by at last one patient data
+    patient_medinfo_reg getPatientMedInfo(patient_id&);
     std::vector<doctor> getDoctors(std::string&);
     doctor getDoctor(doctor_id&);
     std::vector<exam> getExams(std::string&);
-    PatientPrescription prescription;
-    PatientExamResult examResults;
+
 };
 
 #endif // MODEL_H

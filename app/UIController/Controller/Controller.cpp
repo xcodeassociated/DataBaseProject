@@ -58,10 +58,12 @@ void Controller::showPatientRegistrationWindow() {
     this->pRegistrationWindow->setController(this);
     
     this->registrationModel = new RegistrationModel(this);
+    this->registrationModel->update_data();
     this->current_window = Window::PatientRegistrationWindow;
     this->genericModel = this->registrationModel;
     
     this->loginWindow->close();
+    delete this->loginWindow;
     this->pRegistrationWindow->show();
     this->pRegistrationWindow->setup_view();
 }
@@ -71,10 +73,12 @@ void Controller::showDoctorsWindow() {
     this->doctorsWindow->setController(this);
     
     this->doctorsModel = new DoctorsModel(this);
+    this->doctorsModel->update_data();
     this->current_window = Window::DoctorsWindow;
     this->genericModel = this->doctorsModel;
     
     this->loginWindow->close();
+    delete this->loginWindow;
     this->doctorsWindow->show();
     this->doctorsWindow->setup_view();
 }
@@ -84,10 +88,12 @@ void Controller::showAdminWindow() {
     this->adminWindow->setController(this);
     
     this->adminModel = new AdminModel(this);
+    this->adminModel->update_data();
     this->current_window = Window::AdminWindow;
     this->genericModel = this->adminModel;
     
     this->loginWindow->close();
+    delete this->loginWindow;
     this->adminWindow->show();
     this->adminWindow->setup_view();
 }
@@ -115,6 +121,11 @@ doctor Controller::getDoctor(doctor_id& d_id){
 std::vector<exam> Controller::getExams(std::string& query){
     assert(this->genericModel != nullptr);
     return this->genericModel->getExams(query);
+}
+
+patient_medinfo_reg Controller::getPatientMedInfo(patient_id& p_id){
+    assert(this->genericModel != nullptr);
+    return this->genericModel->getPatientMedInfo(p_id);
 }
 
 bool Controller::addPatient(patient& p, patient_medinfo_reg& data) {
