@@ -71,7 +71,7 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
         delete stmt;
     
         for (std::tuple<std::string, std::string, std::string>& e : data) {
-            if (!std::get<0>(e).empty() && !std::get<1>(e).empty() && !std::get<2>(e).empty()) {
+            if (!std::get<0>(e).empty() && !std::get<1>(e).empty()) {
                 stmt = this->connection->prepareStatement(
                         "INSERT INTO `SysMed`.`PatientMedicalInfo` (`id_patient`, `disease_date`, `disease_type`, `disease_other_info`)"
                                 "VALUES ((?), (?), (?), (?));"
@@ -291,7 +291,7 @@ bool RegistrationModel::editPatient(patient& p, patient_medinfo_reg& data){
         delete stmt;
         
         for (std::tuple<std::string, std::string, std::string>& e : data) {
-            if (!std::get<0>(e).empty() && !std::get<1>(e).empty() && !std::get<2>(e).empty()) {
+            if (!std::get<0>(e).empty() && !std::get<1>(e).empty()) {
                 stmt = this->connection->prepareStatement(
                         "INSERT INTO `SysMed`.`PatientMedicalInfo` (`id_patient`, `disease_date`, `disease_type`, `disease_other_info`)"
                                 "VALUES ((?), (?), (?), (?));"
