@@ -19,8 +19,36 @@ linux64 {
 }
 
 mac {
+    _BOOST_PATH = /usr/local/boost
+
+    INCLUDEPATH += "$${_BOOST_PATH}/include"
+    LIBS += -I "$${_BOOST_PATH}/lib"
+    #LIBS += $${_BOOST_PATH}/lib/libboost_system.a
+    #LIBS += $${_BOOST_PATH}/lib/libboost_random.a
+    #LIBS += $${_BOOST_PATH}/lib/libboost_date_time.a
+    #LIBS += $${_BOOST_PATH}/lib/libboost_filesystem.a
+    #LIBS += $${_BOOST_PATH}/lib/libboost_signals.a
+    #LIBS += $${_BOOST_PATH}/lib/libboost_serialization.a
+
+    LIBS += -L"/usr/local/Cellar/mysql-connector-c++/1.1.8/lib" -lmysqlcppconn
+
+    INCLUDEPATH += "/usr/local/Cellar/mysql-connector-c++/1.1.8/include/" \
+                    "/usr/local/Cellar/mysql-connector-c++/1.1.8/include/cppconn"
 
 }
+
+INCLUDEPATH += "Logic/UIDataModel/AdminModel/" \
+ "Logic/UIDataModel/DoctorsModel/" \
+ "Logic/UIDataModel/LoginModel/" \
+ "Logic/UIDataModel/Model" \
+ "Logic/UIDataModel/Model/DataStructures/" \
+ "Logic/UIDataModel/RegistrationModel/" \
+ "UI/AdminWindow/" \
+ "UI/DoctorsWindow/" \
+ "UI/LoginWindow/" \
+ "UI/PatientRegistrationWindow/" \
+ "UIController/Controller/" \
+ "UIController/VirtualController/"
 
 SOURCES += Logic/UIDataModel/AdminModel/AdminModel.cpp \
  Logic/UIDataModel/DoctorsModel/DoctorsModel.cpp \
@@ -32,8 +60,8 @@ SOURCES += Logic/UIDataModel/AdminModel/AdminModel.cpp \
  UI/DoctorsWindow/DoctorsWindow.cpp \
  UI/LoginWindow/LoginWindow.cpp \
  UI/PatientRegistrationWindow/PatientRegistrationWindow.cpp \
- UI/UIController/Controller/Controller.cpp \
- UI/UIController/VirtualController/VirtualController.cpp
+ UIController/Controller/Controller.cpp \
+ UIController/VirtualController/VirtualController.cpp
 
 HEADERS  += Logic/UIDataModel/AdminModel/AdminModel.hpp \
  Logic/UIDataModel/DoctorsModel/DoctorsModel.hpp \
@@ -49,15 +77,14 @@ HEADERS  += Logic/UIDataModel/AdminModel/AdminModel.hpp \
  UI/DoctorsWindow/DoctorsWindow.hpp \
  UI/LoginWindow/LoginWindow.hpp \
  UI/PatientRegistrationWindow/PatientRegistrationWindow.hpp \
- UI/UIController/Controller/Controller.hpp \
- UI/UIController/VirtualController/VirtualController.hpp
+ UIController/Controller/Controller.hpp \
+ UIController/VirtualController/VirtualController.hpp
 
 FORMS    += UI/AdminWindow/AdminWindow.ui \
  UI/DoctorsWindow/DoctorsWindow.ui \
  UI/LoginWindow/LoginWindow.ui \
  UI/PatientRegistrationWindow/PatientRegistrationWindow.ui \
 
-RESOURCES += Resources/projectresources.qrc \
-    UI/Resources/projectresources.qrc
+RESOURCES += Resources/projectresources.qrc
 
 #DISTFILES +=
