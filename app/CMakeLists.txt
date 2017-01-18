@@ -5,14 +5,14 @@ set(CMAKE_CXX_STANDARD 14)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     message("Linux")
-        
+
     set (CMAKE_PREFIX_PATH "/opt/Qt/5.7/gcc_64")
     set (CMAKE_PREFIX_PATH "/usr/include")
     set (CMAKE_PREFIX_PATH "/usr/lib/")
     set (CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu")
 
     find_package (Qt5Widgets)
-    add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
+    add_definitions(${Qt5Widgets_DEFINITIONS})
 
     set(MYSQLCONNECTORCPP_ROOT_DIR
             "${MYSQLCONNECTORCPP_ROOT_DIR}"
@@ -73,7 +73,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set (CMAKE_PREFIX_PATH "/usr/boost/lib")
 
     find_package (Qt5Widgets)
-    add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
+    add_definitions(${Qt5Widgets_DEFINITIONS})
 
     set(MYSQLCONNECTORCPP_ROOT_DIR
             "${MYSQLCONNECTORCPP_ROOT_DIR}"
