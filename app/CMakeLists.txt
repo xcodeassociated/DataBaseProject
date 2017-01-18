@@ -3,7 +3,9 @@ project (SysMed)
 
 set(CMAKE_CXX_STANDARD 14)
 
-if (LINUX)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    message("Linux")
+        
     set (CMAKE_PREFIX_PATH "/opt/Qt/5.7/gcc_64")
     set (CMAKE_PREFIX_PATH "/usr/include")
     set (CMAKE_PREFIX_PATH "/usr/lib/")
@@ -51,7 +53,9 @@ if (LINUX)
     endif()
 endif()
 
-if (APPLE)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    message("MacOSX")
+
     set(CMAKE_MACOSX_RPATH 1)
     set (CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 
