@@ -3,50 +3,114 @@ project (SysMed)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set (CMAKE_PREFIX_PATH "/opt/Qt/5.7/gcc_64")
-set (CMAKE_PREFIX_PATH "/usr/include")
-set (CMAKE_PREFIX_PATH "/usr/lib/")
-set (CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu")
+if (LINUX)
+    set (CMAKE_PREFIX_PATH "/opt/Qt/5.7/gcc_64")
+    set (CMAKE_PREFIX_PATH "/usr/include")
+    set (CMAKE_PREFIX_PATH "/usr/lib/")
+    set (CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu")
 
-find_package (Qt5Widgets)
-add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
+    find_package (Qt5Widgets)
+    add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
 
-set(MYSQLCONNECTORCPP_ROOT_DIR
-        "${MYSQLCONNECTORCPP_ROOT_DIR}"
-        CACHE
-        PATH
-        "/usr/include"
-        "/usr/lib")
+    set(MYSQLCONNECTORCPP_ROOT_DIR
+            "${MYSQLCONNECTORCPP_ROOT_DIR}"
+            CACHE
+            PATH
+            "/usr/include"
+            "/usr/lib")
 
-find_path(MYSQLCONNECTORCPP_INCLUDE_DIR
-        mysql_connection.h
-        HINTS
-        ${MYSQLCONNECTORCPP_ROOT_DIR}
-        PATH_SUFFIXES
-        include)
+    find_path(MYSQLCONNECTORCPP_INCLUDE_DIR
+            mysql_connection.h
+            HINTS
+            ${MYSQLCONNECTORCPP_ROOT_DIR}
+            PATH_SUFFIXES
+            include)
 
-find_library(MYSQLCONNECTORCPP_LIBRARY
-        NAMES
-        mysqlcppconn
-        mysqlcppconn-static
-        HINTS
-        ${MYSQLCONNECTORCPP_ROOT_DIR}
-        PATH_SUFFIXES
-        lib64
-        lib)
+    find_library(MYSQLCONNECTORCPP_LIBRARY
+            NAMES
+            mysqlcppconn
+            mysqlcppconn-static
+            HINTS
+            ${MYSQLCONNECTORCPP_ROOT_DIR}
+            PATH_SUFFIXES
+            lib64
+            lib)
 
-mark_as_advanced(MYSQLCONNECTORCPP_INCLUDE_DIR MYSQLCONNECTORCPP_LIBRARY)
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(MysqlConnectorCpp
-        DEFAULT_MSG
-        MYSQLCONNECTORCPP_INCLUDE_DIR
-        MYSQLCONNECTORCPP_LIBRARY)
+    mark_as_advanced(MYSQLCONNECTORCPP_INCLUDE_DIR MYSQLCONNECTORCPP_LIBRARY)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(MysqlConnectorCpp
+            DEFAULT_MSG
+            MYSQLCONNECTORCPP_INCLUDE_DIR
+            MYSQLCONNECTORCPP_LIBRARY)
 
-if(MYSQLCONNECTORCPP_FOUND)
-    set(MYSQLCONNECTORCPP_INCLUDE_DIRS "${MYSQLCONNECTORCPP_INCLUDE_DIR}") # Add any dependencies here
-    set(MYSQLCONNECTORCPP_LIBRARIES "${MYSQLCONNECTORCPP_LIBRARY}") # Add any dependencies here
-    mark_as_advanced(MYSQLCONNECTORCPP_ROOT_DIR)
-    message("mysqlconnector found!")
+    if(MYSQLCONNECTORCPP_FOUND)
+        set(MYSQLCONNECTORCPP_INCLUDE_DIRS "${MYSQLCONNECTORCPP_INCLUDE_DIR}") # Add any dependencies here
+        set(MYSQLCONNECTORCPP_LIBRARIES "${MYSQLCONNECTORCPP_LIBRARY}") # Add any dependencies here
+        mark_as_advanced(MYSQLCONNECTORCPP_ROOT_DIR)
+        message("mysqlconnector found!")
+    endif()
+endif()
+
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH 1)
+    set (CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+
+    set (CMAKE_PREFIX_PATH "/usr/local/Cellar/qt5/5.7.1_1/")
+    set (CMAKE_PREFIX_PATH "/usr/local/Cellar/qt5/5.7.1_1/include")
+    set (CMAKE_PREFIX_PATH "/usr/local/Cellar/qt5/5.7.1_1/lib")
+
+    set (CMAKE_PREFIX_PATH "/usr/lib/")
+    set (CMAKE_PREFIX_PATH "/usr/include/")
+    set (CMAKE_PREFIX_PATH "/usr/lib/")
+    set (CMAKE_PREFIX_PATH "/usr/local/include")
+    set (CMAKE_PREFIX_PATH "/usr/local/lib")
+    set (CMAKE_PREFIX_PATH "/usr/boost/")
+    set (CMAKE_PREFIX_PATH "/usr/boost/include")
+    set (CMAKE_PREFIX_PATH "/usr/boost/lib")
+
+    find_package (Qt5Widgets)
+    add_definitions(${Qt5Widgets_DEFINITIONS} -ldl)
+
+    set(MYSQLCONNECTORCPP_ROOT_DIR
+            "${MYSQLCONNECTORCPP_ROOT_DIR}"
+            CACHE
+            PATH
+            "/usr/local/Cellar/mysql-connector-c++/1.1.8/include"
+            "/usr/local/Cellar/mysql-connector-c++/1.1.8/lib")
+
+    find_path(MYSQLCONNECTORCPP_INCLUDE_DIR
+            mysql_connection.h
+            HINTS
+            ${MYSQLCONNECTORCPP_ROOT_DIR}
+            PATH_SUFFIXES
+            include)
+
+    find_library(MYSQLCONNECTORCPP_LIBRARY
+            NAMES
+            mysqlcppconn
+            mysqlcppconn-static
+            HINTS
+            ${MYSQLCONNECTORCPP_ROOT_DIR}
+            PATH_SUFFIXES
+            lib64
+            lib)
+
+    mark_as_advanced(MYSQLCONNECTORCPP_INCLUDE_DIR MYSQLCONNECTORCPP_LIBRARY)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(MysqlConnectorCpp
+            DEFAULT_MSG
+            MYSQLCONNECTORCPP_INCLUDE_DIR
+            MYSQLCONNECTORCPP_LIBRARY)
+
+    if(MYSQLCONNECTORCPP_FOUND)
+        set(MYSQLCONNECTORCPP_INCLUDE_DIRS "${MYSQLCONNECTORCPP_INCLUDE_DIR}") # Add any dependencies here
+        set(MYSQLCONNECTORCPP_LIBRARIES "${MYSQLCONNECTORCPP_LIBRARY}") # Add any dependencies here
+        mark_as_advanced(MYSQLCONNECTORCPP_ROOT_DIR)
+        message("mysqlconnector found!")
+    endif()
+endif()
+
+if (WIN32)
 endif()
 
 set(CMAKE_AUTOUIC ON)
