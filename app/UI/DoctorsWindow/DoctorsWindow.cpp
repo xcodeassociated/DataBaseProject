@@ -65,7 +65,7 @@ void DoctorsWindow::fillPatientsList() {
 
 void DoctorsWindow::updatePatients(){
     std::string query = "all";
-    this->patients = this->vc->getPatients(query);
+    this->patients = this->vc->getPatients(query, PatientQueryOrder::Id, QuerySort::ASC);
 }
 
 void DoctorsWindow::doneExamination(){

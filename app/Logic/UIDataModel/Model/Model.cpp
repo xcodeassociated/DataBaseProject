@@ -94,7 +94,28 @@ std::pair<Model::QType, std::string> Model::QueryParser::parse(std::string query
     return result;
 }
 
-void Model::update_patients(std::string& query){
+std::string Model::parsePatientQueryOrder(PatientQueryOrder pqo){
+    std::string result{};
+
+    switch (pqo){
+        case PatientQueryOrder::Id:
+            result = "id";
+            break;
+        case PatientQueryOrder::Name:
+            result = "name";
+            break;
+        case PatientQueryOrder::Lastname:
+            result = "lastname";
+            break;
+        case PatientQueryOrder::Pesel:
+            result = "pesel";
+            break;
+    }
+
+    return result;
+}
+
+void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort qs){
     if (query.length() == 0){
         this->update_patients();
         this->update_pexams();
@@ -107,7 +128,9 @@ void Model::update_patients(std::string& query){
     }
     
     auto parsed = Model::QueryParser::parse(query);
-    
+    std::string pqo_value = this->parsePatientQueryOrder(pqo);
+    unsigned qs_value = static_cast<unsigned>(qs);
+
     if (parsed.first == Model::QType::NONE)
         return;
     
@@ -122,9 +145,20 @@ void Model::update_patients(std::string& query){
     res = stmt->executeQuery();
     delete res;
     delete stmt;
-    
+
+    stmt = this->connection->prepareStatement("set @order = (?)");
+    stmt->setString(1, pqo_value);
+    res = stmt->executeQuery();
+    delete res;
+    delete stmt;
+
+    stmt = this->connection->prepareStatement("set @p = (?)");
+    stmt->setInt(1, qs_value);
+    res = stmt->executeQuery();
+    delete res;
+    delete stmt;
+
     stmt = this->connection->prepareStatement("set @f = (?)");
-    
     if (parsed.first == Model::QType::NAME)
         stmt->setString(1, "name");
     else if (parsed.first == Model::QType::NAME_ONLY)
@@ -141,7 +175,7 @@ void Model::update_patients(std::string& query){
     delete res;
     delete stmt;
 
-    stmt = this->connection->prepareStatement("select find_patient(@query, @f) as count_");
+    stmt = this->connection->prepareStatement("select find_patient(@query, @f, @order, @p) as count_");
     res = stmt->executeQuery();
     res->next();
     int exec_query_count = res->getInt(1);
@@ -354,6 +388,12 @@ void Model::update_pexams(){
         delete res;
     }
 }
+
+void Model::update_pexams(std::string& query, PExamsQueryOrder peqo , QuerySort qs) {
+
+}
+
+
 // TODO!
 void Model::update_pprescriptions(){
     this->prescriptions.clear();
@@ -433,12 +473,12 @@ patient Model::getPatient(patient_id& p_id) {
         return {};
 }
 
-std::vector<patient> Model::getPatients(std::string& query) {
+std::vector<patient> Model::getPatients(std::string& query, PatientQueryOrder pqo, QuerySort qs) {
     if (query == "all"){
         return this->patients;
     }
     
-    this->update_patients(query);
+    this->update_patients(query, pqo, qs);
     return this->patients;
 }
 
@@ -459,11 +499,12 @@ doctor Model::getDoctor(doctor_id& d_id){
         return {};
 }
 
-std::vector<exam> Model::getExams(std::string& query){
+std::vector<exam> Model::getExams(std::string& query, PExamsQueryOrder peqo, QuerySort qs){
     if (query == "all")
         return this->pExams;
-    else
-        return {};
+
+    this->update_pexams(query, peqo, qs);
+    return this->pExams;
 }
 
 patient_medinfo_reg Model::getPatientMedInfo(patient_id& p_id){

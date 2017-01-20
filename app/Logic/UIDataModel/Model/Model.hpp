@@ -44,7 +44,9 @@ class Model{
     };
     
     using QType = QueryParser::QueryType;
-    
+
+    std::string parsePatientQueryOrder(PatientQueryOrder);
+
 protected:
     VirtualController* vController = nullptr;
     Patients patients;
@@ -83,9 +85,10 @@ protected:
     void commit_transaction();
     
     void update_patients();
-    void update_patients(std::string&);
+    void update_patients(std::string&, PatientQueryOrder, QuerySort);
     void update_staff();
     void update_pexams();
+    void update_pexams(std::string&, PExamsQueryOrder , QuerySort);
     void update_pmedrecords();
     void update_pprescriptions();
     void update_pexamresults();
@@ -96,11 +99,11 @@ public:
     virtual ~Model();
     
     patient getPatient(patient_id&); // returns patient by id
-    std::vector<patient> getPatients(std::string&); // returns patients by at last one patient data
+    std::vector<patient> getPatients(std::string&, PatientQueryOrder, QuerySort); // returns patients by at last one patient data
     patient_medinfo_reg getPatientMedInfo(patient_id&);
     std::vector<doctor> getDoctors(std::string&);
     doctor getDoctor(doctor_id&);
-    std::vector<exam> getExams(std::string&);
+    std::vector<exam> getExams(std::string&, PExamsQueryOrder , QuerySort);
 
 };
 

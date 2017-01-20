@@ -103,9 +103,9 @@ patient Controller::getPatient(patient_id& p_id) {
     return this->genericModel->getPatient(p_id);
 }
 
-std::vector<patient> Controller::getPatients(std::string& query) {
+std::vector<patient> Controller::getPatients(std::string& query, PatientQueryOrder pqo, QuerySort qs) {
     assert(this->genericModel != nullptr);
-    return this->genericModel->getPatients(query);
+    return this->genericModel->getPatients(query, pqo, qs);
 }
 
 std::vector<doctor> Controller::getDoctors(std::string& query){
@@ -118,9 +118,9 @@ doctor Controller::getDoctor(doctor_id& d_id){
     return this->genericModel->getDoctor(d_id);
 }
 
-std::vector<exam> Controller::getExams(std::string& query){
+std::vector<exam> Controller::getExams(std::string& query, PExamsQueryOrder peqo, QuerySort qs){
     assert(this->genericModel != nullptr);
-    return this->genericModel->getExams(query);
+    return this->genericModel->getExams(query, peqo, qs);
 }
 
 patient_medinfo_reg Controller::getPatientMedInfo(patient_id& p_id){

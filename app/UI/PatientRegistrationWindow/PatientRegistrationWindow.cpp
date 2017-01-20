@@ -28,7 +28,11 @@ PatientRegistrationWindow::PatientRegistrationWindow(QWidget *parent) :
     connect(this->ui->visitClear_2, SIGNAL(clicked()), this, SLOT(cleanExamEditUI()));
     connect(this->ui->removePatientButton, SIGNAL(clicked()), this, SLOT(deletePatient()));
     connect(this->ui->removeExamButton, SIGNAL(clicked()), this, SLOT(deleteExam()));
-    
+
+    connect(this->ui->sortByCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(sortByChanged(int)));
+    connect(this->ui->DESC, SIGNAL(clicked()), this, SLOT(radioBChanged()));
+    connect(this->ui->ASC, SIGNAL(clicked()), this, SLOT(radioBChanged()));
+
 }
 
 PatientRegistrationWindow::~PatientRegistrationWindow()
@@ -426,14 +430,53 @@ void PatientRegistrationWindow::selectPatientInList(){
     }
 }
 
+void PatientRegistrationWindow::radioBChanged(){
+    this->searchFieldChanged(this->ui->searchField->text());
+}
+
+void PatientRegistrationWindow::sortByChanged(int index){
+    this->searchFieldChanged(this->ui->searchField->text());
+}
+
 void PatientRegistrationWindow::searchFieldChanged(const QString& text){
-    std::cerr << "Search filed changed: " << text.toStdString() << "\n";
-    
-    this->cleanPatientList();
-    
-    this->updatePatients(text.toStdString());
-    
-    this->fillPatientsList();
+    auto sb = this->ui->sortByCombo->currentText().toStdString();
+    bool desc = this->ui->DESC->isChecked();
+    QuerySort qs = (desc) ? QuerySort::DESC : QuerySort::ASC;
+
+
+    std::cerr << "Search filed changed: " << text.toStdString() << " sb: " << sb << " desc: " << desc << "\n";
+
+    if (this->currentTab == CurrentTab::P_REG_TAB || this->currentTab == CurrentTab::P_EDIT_TAB) {
+        PatientQueryOrder pqo;
+
+        if (sb == "imie")
+            pqo = PatientQueryOrder::Name;
+        else if (sb == "nazwisko")
+            pqo = PatientQueryOrder::Lastname;
+        else if (sb == "pesel")
+            pqo = PatientQueryOrder::Pesel;
+
+        this->cleanLeftList();
+
+        this->updatePatients(text.toStdString(), pqo, qs);
+
+        this->fillPatientsList();
+    }else{
+        PExamsQueryOrder peqo;
+
+        if (sb == "pacjent")
+            peqo = PExamsQueryOrder::Patient;
+        else if (sb == "lekarz")
+            peqo = PExamsQueryOrder::Doctor;
+        else if (sb == "termin")
+            peqo = PExamsQueryOrder::Date;
+
+        this->cleanLeftList();
+
+        this->updateExams(text.toStdString(), peqo, qs);
+
+        this->fillExamsList();
+    }
 }
 
 
@@ -445,7 +488,7 @@ bool PatientRegistrationWindow::setController(VirtualController* vc){
         return false;
 }
 
-void PatientRegistrationWindow::cleanPatientList(){
+void PatientRegistrationWindow::cleanLeftList(){
     this->ui->patientList->clearSelection();
     
     if (this->ui->patientList->count() > 0){
@@ -466,20 +509,25 @@ void PatientRegistrationWindow::cleanSelectors(){
     this->ui->selectDoctor->clear();
     this->ui->selectPatient_2->clear();
     this->ui->selectDoctor_2->clear();
+    this->ui->sortByCombo->clear();
 }
 
 void PatientRegistrationWindow::updatePatients(){
     std::string query = "all";
-    this->patients = this->vc->getPatients(query);
+    this->patients = this->vc->getPatients(query, PatientQueryOrder::Name, QuerySort::ASC);
 }
 
-void PatientRegistrationWindow::updatePatients(std::string query){
-    this->patients = this->vc->getPatients(query);
+void PatientRegistrationWindow::updatePatients(std::string query, PatientQueryOrder pqo, QuerySort qs){
+    this->patients = this->vc->getPatients(query, pqo, qs);
 }
 
 void PatientRegistrationWindow::updateExams(){
     std::string query = "all";
-    this->exams = this->vc->getExams(query);
+    this->exams = this->vc->getExams(query, PExamsQueryOrder::ID, QuerySort::ASC);
+}
+
+void PatientRegistrationWindow::updateExams(std::string query, PExamsQueryOrder peq, QuerySort qs){
+    this->exams = this->vc->getExams(query, peq, qs);
 }
 
 void PatientRegistrationWindow::fillPatientsList() {
@@ -521,7 +569,7 @@ void PatientRegistrationWindow::fillEditMedInfoTable(){
 
 void PatientRegistrationWindow::setup_view() {
     this->cleanSelectors();
-    this->cleanPatientList();
+    this->cleanLeftList();
     this->pSelects.clear();
     this->dSelect.clear();
     
@@ -532,6 +580,10 @@ void PatientRegistrationWindow::setup_view() {
             this->cleanPatientRegUi();
             this->updatePatients();
             this->fillPatientsList();
+
+            for (const auto& s : psortby)
+                this->ui->sortByCombo->addItem({s.c_str()});
+
             break;
             
         case CurrentTab::E_REG_TAB:
@@ -563,7 +615,10 @@ void PatientRegistrationWindow::setup_view() {
                 this->ui->selectDoctor->addItem(e);
                 this->dSelect.push_back(e);
             }
-            
+
+            for (const auto& s : esortby)
+                this->ui->sortByCombo->addItem({s.c_str()});
+
             break;
     
         case CurrentTab::P_EDIT_TAB:
@@ -572,8 +627,12 @@ void PatientRegistrationWindow::setup_view() {
             this->cleanEditPatientUI();
             this->updatePatients();
             this->fillPatientsList();
+
             this->fillEditMedInfoTable();
-            
+
+            for (const auto& s : psortby)
+                this->ui->sortByCombo->addItem({s.c_str()});
+
             break;
     
         case CurrentTab::E_EDIT_TAB:
@@ -600,7 +659,10 @@ void PatientRegistrationWindow::setup_view() {
                 this->ui->selectDoctor_2->addItem(e);
                 this->dSelect.push_back(e);
             }
-            
+
+            for (const auto& s : esortby)
+                this->ui->sortByCombo->addItem({s.c_str()});
+
             break;
     }
 }

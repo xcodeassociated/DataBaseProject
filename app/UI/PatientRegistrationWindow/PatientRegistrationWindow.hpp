@@ -8,6 +8,7 @@
 #include <vector>
 #include <cassert>
 #include <sstream>
+#include <array>
 
 #include "VirtualController.hpp"
 
@@ -41,12 +42,13 @@ private:
     exam_id current_editing_exam = -1;
     
     void fillPatientsList();
-    void cleanPatientList();
+    void cleanLeftList();
     
     void updateDoctors();
     void updatePatients();
-    void updatePatients(std::string);
+    void updatePatients(std::string, PatientQueryOrder, QuerySort);
     void updateExams();
+    void updateExams(std::string, PExamsQueryOrder, QuerySort);
     void fillExamsList();
     void fillEditMedInfoTable();
     
@@ -60,7 +62,10 @@ private:
     };
     
     CurrentTab currentTab;
-    
+
+    std::array<std::string, 3> psortby{"imie", "nazwisko", "pesel"};
+    std::array<std::string, 3> esortby{"pacjent", "lekarz", "termin"};
+
 private Q_SLOTS:
     void tabChange();
     
@@ -86,6 +91,8 @@ private Q_SLOTS:
     void selectPatientInList();
     
     void searchFieldChanged(const QString&);
+    void sortByChanged(int);
+    void radioBChanged();
 };
 
 #endif // PATIENTREGISTRATIONWINDOW_H

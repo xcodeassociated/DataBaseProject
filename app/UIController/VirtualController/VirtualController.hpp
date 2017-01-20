@@ -31,6 +31,25 @@ enum class ReportFormat {
     PDF
 };
 
+enum class PatientQueryOrder {
+    Id = 0,
+    Name = 1,
+    Lastname = 2,
+    Pesel = 3
+};
+
+enum class PExamsQueryOrder {
+    ID = 0,
+    Patient = 1,
+    Doctor = 2,
+    Date = 3
+};
+
+enum class QuerySort {
+    ASC = 0,
+    DESC = 1
+};
+
 using patient_id = std::size_t;
 using doctor_id = std::size_t;
 using person_id = std::size_t;
@@ -71,11 +90,11 @@ public:
     virtual void showAdminWindow() = 0;
     
     virtual patient getPatient(patient_id&) = 0; // returns patient by id
-    virtual std::vector<patient> getPatients(std::string&) = 0; // returns patients by at last one patient data
+    virtual std::vector<patient> getPatients(std::string&, PatientQueryOrder, QuerySort) = 0; // returns patients by at last one patient data
     virtual patient_medinfo_reg getPatientMedInfo(patient_id&) = 0;
     virtual std::vector<doctor> getDoctors(std::string&) = 0;
     virtual doctor getDoctor(doctor_id&) = 0;
-    virtual std::vector<exam> getExams(std::string&) = 0;
+    virtual std::vector<exam> getExams(std::string&, PExamsQueryOrder, QuerySort) = 0;
     
     virtual bool addPatient(patient&, patient_medinfo_reg&) = 0;
     virtual bool addPatientExam(patient_id&, patient_exam_reg&) = 0;
