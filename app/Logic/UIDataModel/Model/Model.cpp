@@ -72,14 +72,127 @@ void Model::update_patients(){
     delete res;
 }
 
-void Model::commit() {
-    sql::Statement *stmt = nullptr;
-    sql::ResultSet *res = nullptr;
+std::pair<Model::QType, std::string> Model::QueryParser::parse(std::string query) {
+    std::pair<Model::QType, std::string> result{};
     
-    stmt = this->connection->createStatement();
-    res = stmt->executeQuery("COMMIT;");
+    if (std::string(query.substr(0, 5)) == "name="){
+        result.first = Model::QType::NAME;
+        result.second = query.substr(5, query.length());
+    }else if (std::string(query.substr(0, 6)) == "!name=") {
+        result.first = Model::QType::NAME_ONLY;
+        result.second = query.substr(6, query.length());
+    }else if (std::string(query.substr(0, 9)) == "lastname="){
+        result.first = Model::QType::LASTNAME;
+        result.second = query.substr(9, query.length());
+    }else if (std::string(query.substr(0, 6)) == "pesel="){
+        result.first = Model::QType::PESEL;
+        result.second = query.substr(6, query.length());
+    }else{
+        result.first = Model::QType::NONE;
+        result.second = "";
+    }
+    return result;
+}
+
+void Model::update_patients(std::string& query){
+    if (query.length() == 0){
+        this->update_patients();
+        this->update_pexams();
+        this->update_pmedrecords();
+    
+        this->update_pprescriptions();
+        this->update_pexamresults();
+    }else if (query.length() > 0 && query.length() < 5){
+        return;
+    }
+    
+    auto parsed = Model::QueryParser::parse(query);
+    
+    if (parsed.first == Model::QType::NONE)
+        return;
+    
+    std::string ask = parsed.second;
+
+    this->patients.clear();
+    
+    sql::PreparedStatement *stmt = nullptr;
+    sql::ResultSet *res = nullptr;
+    stmt = this->connection->prepareStatement("set @query = (?)");
+    stmt->setString(1, ask);
+    res = stmt->executeQuery();
+    delete res;
+    delete stmt;
+    
+    stmt = this->connection->prepareStatement("set @f = (?)");
+    
+    if (parsed.first == Model::QType::NAME)
+        stmt->setString(1, "name");
+    else if (parsed.first == Model::QType::NAME_ONLY)
+        stmt->setString(1, "!name");
+    else if (parsed.first == Model::QType::LASTNAME)
+        stmt->setString(1, "lastname");
+    else if (parsed.first == Model::QType::PESEL) {
+        std::cerr << "sdsdsd";
+        stmt->setString(1, "pesel");
+    }else
+        ;
+        
+    res = stmt->executeQuery();
+    delete res;
+    delete stmt;
+
+    stmt = this->connection->prepareStatement("select find_patient(@query, @f) as count_");
+    res = stmt->executeQuery();
+    res->next();
+    int exec_query_count = res->getInt(1);
+    std::cerr << "query count: " << exec_query_count << std::endl;
+    delete res;
+    delete stmt;
+
+    stmt = this->connection->prepareStatement(
+            "select * from find_patient_result"
+    );
+    res = stmt->executeQuery();
+
+    while (res->next()) {
+        std::size_t pesel = 0;
+        auto id = static_cast<std::size_t >(res->getInt(1));
+        std::string name = res->getString("Name");
+        std::string lastname = res->getString("Lastname");
+        std::string pesel_str = res->getString("PESEL");
+    
+        std::stringstream sstream(pesel_str);
+        sstream >> pesel;
+    
+        std::string city = res->getString("City");
+        std::string street = res->getString("Street");
+        std::string house_nr = res->getString("House Number");
+        std::string flat_nr = "";
+        if (!res->isNull("Flat Number"))
+            flat_nr = res->getString("Flat Number");
+        std::string postal = res->getString("Postal Code");
+    
+        Patient p{{name, lastname, id, pesel}, std::make_tuple(city, street, house_nr, flat_nr, postal)};
+        this->patients.push_back(p);
+    }
     
     delete res;
+    delete stmt;
+
+    this->update_pexams();
+    this->update_pmedrecords();
+    
+    this->update_pprescriptions();
+    this->update_pexamresults();
+
+}
+
+void Model::commit_transaction() {
+    sql::Statement *stmt = nullptr;
+
+    stmt = this->connection->createStatement();
+    stmt->execute("COMMIT;");
+
     delete stmt;
 }
 
@@ -274,7 +387,7 @@ void Model::update_pexamresults(){
     delete res;
 }
 
-void Model::create_snapshot() {
+std::string Model::create_transaction() {
     sql::PreparedStatement *stmt = nullptr;
     sql::ResultSet *res = nullptr;
     stmt = this->connection->prepareStatement("select cast(now() as date) as `CurrentDate`, cast(now() as time) as `CurrentTime`;");
@@ -288,17 +401,26 @@ void Model::create_snapshot() {
     std::string snap = date + "_" + time;
     delete res;
     delete stmt;
-    
+
     std::cerr << "Snap: " << snap << std::endl;
-    
-    std::string q = std::string("SAVEPOINT") + std::string(" `") + snap + "`;";
-    stmt = this->connection->prepareStatement(q);
-    res = stmt->executeQuery();
-    
-    std::cerr << "Snap: " << snap << std::endl;
-    
-    delete res;
-    delete stmt;
+
+    sql::Statement *stmt2 = nullptr;
+    stmt2 = this->connection->createStatement();
+    stmt2->execute("START TRANSACTION;");
+
+    delete stmt2;
+
+    std::string q = std::string("SAVEPOINT") + std::string(" ") + snap + ";";
+    std::replace(q.begin(), q.end(), '-', '_');
+    std::replace(q.begin(), q.end(), ':', '_');
+    std::cerr << "Snap: " << q << std::endl;
+
+    stmt2 = this->connection->createStatement();
+    stmt2->execute(q.c_str());
+
+    delete stmt2;
+
+    return q;
 }
 
 patient Model::getPatient(patient_id& p_id) {
@@ -315,7 +437,9 @@ std::vector<patient> Model::getPatients(std::string& query) {
     if (query == "all"){
         return this->patients;
     }
-    return {};
+    
+    this->update_patients(query);
+    return this->patients;
 }
 
 std::vector<doctor> Model::getDoctors(std::string& query){

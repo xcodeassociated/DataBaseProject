@@ -31,6 +31,20 @@ using PatientsPrescriptions = std::vector<PatientPrescription>;
 using PatientsExamsResults = std::vector<PatientExamResult>;
 
 class Model{
+    
+    struct QueryParser {
+        enum class QueryType {
+            NONE = -1,
+            NAME = 0,
+            NAME_ONLY = 1,
+            LASTNAME = 2,
+            PESEL = 3
+        };
+        static std::pair<QueryType, std::string> parse(std::string);
+    };
+    
+    using QType = QueryParser::QueryType;
+    
 protected:
     VirtualController* vController = nullptr;
     Patients patients;
@@ -64,9 +78,12 @@ protected:
     static OwnerType ownerType;
     
     virtual void update_data() = 0;
-    void create_snapshot();
-    void commit();
+    
+    std::string create_transaction();
+    void commit_transaction();
+    
     void update_patients();
+    void update_patients(std::string&);
     void update_staff();
     void update_pexams();
     void update_pmedrecords();

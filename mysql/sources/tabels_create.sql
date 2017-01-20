@@ -162,3 +162,13 @@ CREATE TABLE `SysMed`.`StaffPosition` (
 ALTER TABLE `SysMed`.`StaffPosition` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 
+
+
+DROP TABLE IF EXISTS `SysMed`.`Logs`;
+CREATE TABLE `SysMed`.`Logs` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `date` DATETIME NOT NULL DEFAULT NOW(),
+  `actions` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+ALTER TABLE `SysMed`.`Logs` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

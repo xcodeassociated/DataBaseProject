@@ -132,6 +132,7 @@ void PatientRegistrationWindow::cleanPatientRegUi(){
 }
 
 void PatientRegistrationWindow::addExamToSystem(){
+    std::cerr << "1\n";
     auto pSelIndex = this->ui->selectPatient->currentIndex();
     auto dSelIndex = this->ui->selectDoctor->currentIndex();
     
@@ -147,6 +148,7 @@ void PatientRegistrationWindow::addExamToSystem(){
     
     std::cerr << "date: " << date << " time: " << time;
     patient_exam_reg e = std::make_tuple(d_id, date, time, this->ui->visiOther->toPlainText().toStdString());
+    
     if (this->vc->addPatientExam(p_id, e)){
         this->setup_view();
         std::stringstream msg;
@@ -426,6 +428,12 @@ void PatientRegistrationWindow::selectPatientInList(){
 
 void PatientRegistrationWindow::searchFieldChanged(const QString& text){
     std::cerr << "Search filed changed: " << text.toStdString() << "\n";
+    
+    this->cleanPatientList();
+    
+    this->updatePatients(text.toStdString());
+    
+    this->fillPatientsList();
 }
 
 
@@ -462,6 +470,10 @@ void PatientRegistrationWindow::cleanSelectors(){
 
 void PatientRegistrationWindow::updatePatients(){
     std::string query = "all";
+    this->patients = this->vc->getPatients(query);
+}
+
+void PatientRegistrationWindow::updatePatients(std::string query){
     this->patients = this->vc->getPatients(query);
 }
 

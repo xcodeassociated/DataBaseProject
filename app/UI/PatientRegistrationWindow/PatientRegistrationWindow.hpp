@@ -45,6 +45,7 @@ private:
     
     void updateDoctors();
     void updatePatients();
+    void updatePatients(std::string);
     void updateExams();
     void fillExamsList();
     void fillEditMedInfoTable();

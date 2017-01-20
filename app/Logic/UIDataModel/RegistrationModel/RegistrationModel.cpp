@@ -18,7 +18,8 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
     sql::ResultSet *res = nullptr;
     
     try {
-        //this->create_snapshot();
+        auto savepoint = this->create_transaction();
+        
         auto adr = std::get<4>(p);
         
         stmt = this->connection->prepareStatement(
@@ -33,8 +34,7 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
         delete res;
         delete stmt;
         
-        //TODO: Export this as mysql function and get data by calling function
-        stmt = this->connection->prepareStatement("SELECT `id` FROM `SysMed`.`Patients` ORDER BY `id` DESC LIMIT 1;");
+        stmt = this->connection->prepareStatement("SELECT getNewInsertedPatientsID() as 'LastInsertedPatientsID';"); //("SELECT `id` FROM `SysMed`.`Patients` ORDER BY `id` DESC LIMIT 1;");
         res = stmt->executeQuery();
         assert(res->rowsCount() == 1);
         res->next();
@@ -87,7 +87,8 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
             }
         }
         
-        //this->commit();
+        this->commit_transaction();
+        
         this->update_patients();
         this->update_pmedrecords();
         
@@ -102,10 +103,13 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
 }
 
 bool RegistrationModel::addPatientExam(patient_id& p, patient_exam_reg& data){
+
     sql::PreparedStatement *stmt = nullptr;
     sql::ResultSet *res = nullptr;
     
     try{
+        auto savepoint = this->create_transaction();
+        std::cerr << "-1\n";
         stmt = this->connection->prepareStatement(
                 "INSERT INTO `SysMed`.`PatientExamDate` (`id_patient`, `id_doctor`, `exam_date`, `other_examdate_info`)"
                         "VALUES ((?), (?), ( select cast( (cast((?) as datetime) + cast((?) as time)) as datetime)  ), (?));"
@@ -117,10 +121,12 @@ bool RegistrationModel::addPatientExam(patient_id& p, patient_exam_reg& data){
         stmt->setString(5, std::get<3>(data));
         
         res = stmt->executeQuery();
-
+        std::cerr << "-11\n";
         delete res;
         delete stmt;
-
+    
+        this->commit_transaction();
+  
         this->update_pexams();
         
     }catch (sql::SQLException &e){
@@ -138,6 +144,8 @@ bool RegistrationModel::deletePatient(patient_id& p_id){
     sql::ResultSet *res = nullptr;
     
     try{
+        auto savepoint = this->create_transaction();
+    
         sql::PreparedStatement *stmt = nullptr;
         sql::ResultSet *res = nullptr;
     
@@ -149,6 +157,8 @@ bool RegistrationModel::deletePatient(patient_id& p_id){
         
         delete res;
         delete stmt;
+        
+        this->commit_transaction();
         
         this->update_data();
         
@@ -167,6 +177,8 @@ bool RegistrationModel::deleteExam(exam_id& e_id){
     sql::ResultSet *res = nullptr;
     
     try{
+        auto savepoint = this->create_transaction();
+    
         stmt = this->connection->prepareStatement("DELETE FROM `SysMed`.`PatientExamDate`"
                                                           "WHERE `SysMed`.`PatientExamDate`.`id_patient_exam` = (?); ");
         stmt->setInt(1, e_id);
@@ -174,6 +186,8 @@ bool RegistrationModel::deleteExam(exam_id& e_id){
         
         delete res;
         delete stmt;
+        
+        this->commit_transaction();
         
         this->update_pexams();
         
@@ -193,6 +207,8 @@ bool RegistrationModel::editPatientExam(patient_id& p, patient_exam_reg& data, s
     sql::ResultSet *res = nullptr;
     
     try{
+        auto savepoint = this->create_transaction();
+    
         stmt = this->connection->prepareStatement(
                 "UPDATE `SysMed`.`PatientExamDate` SET"
                         "`id_patient` = (?), "
@@ -213,6 +229,8 @@ bool RegistrationModel::editPatientExam(patient_id& p, patient_exam_reg& data, s
         delete res;
         delete stmt;
         
+        this->commit_transaction();
+        
         this->update_pexams();
         
     }catch (sql::SQLException &e){
@@ -230,6 +248,8 @@ bool RegistrationModel::editPatient(patient& p, patient_medinfo_reg& data){
     sql::ResultSet *res = nullptr;
     
     try {
+        auto savepoint = this->create_transaction();
+        
         auto p_id = std::get<2>(p);
         patient_adr adr = std::get<4>(p);
     
@@ -306,6 +326,8 @@ bool RegistrationModel::editPatient(patient& p, patient_medinfo_reg& data){
                 delete stmt;
             }
         }
+        
+        this->commit_transaction();
         
         this->update_patients();
         this->update_pmedrecords();
