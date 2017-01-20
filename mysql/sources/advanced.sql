@@ -139,7 +139,7 @@ CREATE TRIGGER patientExamDate_LOG_trigger_del BEFORE DELETE ON `SysMed`.`Patien
 FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
 VALUES(concat('DELETED Patient Exam: (', old.id_patient_exam, ') ' ,old.id_patient, ' -> ', old.id_doctor));
 
-DROP TRIGGER IF EXISTS patientExamDate_LOG_trigger;
+DROP TRIGGER IF EXISTS patientExamDate_LOG_trigger_upd;
 CREATE TRIGGER patientExamDate_LOG_trigger_upd BEFORE UPDATE ON `SysMed`.`PatientExamDate`
 FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
 VALUES(concat('UPDATED Patient Exam: (', old.id_patient_exam, ') ' ,old.id_patient, ' -> ', old.id_doctor, ' => ', new.id_patient, ' -> ', new.id_doctor ));
