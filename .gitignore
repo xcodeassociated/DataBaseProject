@@ -36,4 +36,10 @@
 */.idea/*
 */*.ui.autosave
 
+html/*
+latex/*
+
+*/html/*
+*/latex/*
+
 build-GUI*
