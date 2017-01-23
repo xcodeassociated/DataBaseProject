@@ -337,17 +337,18 @@ BEGIN
 END;;
 DELIMITER ;
 
-set @query = 't';
-set @query2 = '6';
+set @query = 'j';
+set @query2 = '';
 set @order = '!name';
 set @order2 = 'pesel';
 set @p = 0;
 set @p2 = 1;
 set @f = '!name';
-set @f2 = 'pesel';
+set @f2 = '';
 
 
 call find_patient_2(@query, @f, @query2, @f2, @order2, @p2);
+
 select * from final_22;
 SELECT * from final_2_and;
 
@@ -524,16 +525,19 @@ select count(*) into @find_exam_and_count from texam6_and;
 END$$
 DELIMITER ;
 
-set @query = 'a';
-set @query2 = 'j';
+
 set @order = 'pid';
 set @order2 = 'exam_date';
 set @p = 0;
 set @p2 = 1;
-set @f = '!pname';
-set @f2 = 'dname';
+
+set @query = '6'; -- A
+set @f = 'pesel'; -- A
+set @query2 = 'f'; -- B
+set @f2 = 'dname'; -- B
 
 call find_exam(@query, @f, @query2, @f2, @order, @p);
+
 select `id_patient_exam` as `ID`,
   `pid` as `PatientID`,
   `did` as `DoctorID`,
@@ -554,6 +558,31 @@ select @find_exam_count;
 select @find_exam_and_count;
 
 
+SELECT
+  `id` as `ID`,
+  `name` as `Name`,
+  `lastname` as `Lastname`,
+  `pesel` as `PESEL`,
+  `city` as `City`,
+  `street` as `Street`,
+  IF(`house_nr` = null, "", `house_nr`)  as `House Number`,
+  `flat_nr` as `Flat Number`,
+  `postal_code` as `Postal Code`
+FROM `SysMed`.`Patients`
+	LEFT OUTER JOIN `SysMed`.`PersonAddress`
+	ON `SysMed`.`Patients`.`id` = `SysMed`.`PersonAddress`.`id_patient`
+  ORDER BY name DESC;
+
+
+SELECT
+  `id_patient_exam` as `ID`,
+  `id_patient` as `PatientID`,
+  `id_doctor` as `DoctorID`,
+  cast(`exam_date` as date) as `ExamDate`,
+  cast(`exam_date` as time) as `ExamTime`,
+  `other_examdate_info` as `Other`
+FROM `SysMed`.`PatientExamDate`
+ORDER BY `exam_date` ASC;
 
 
 select cast(now() as date) as `CurrentDate`, cast(now() as time) as `CurrentTime`;
@@ -660,3 +689,37 @@ DROP TRIGGER IF EXISTS patientExamDate_LOG_trigger_upd;
 CREATE TRIGGER patientExamDate_LOG_trigger_upd BEFORE UPDATE ON `SysMed`.`PatientExamDate`
 FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
 VALUES(concat('UPDATED Patient Exam: (', old.id_patient_exam, ') ' ,old.id_patient, ' -> ', old.id_doctor, ' => ', new.id_patient, ' -> ', new.id_doctor ));
+
+
+
+DROP TRIGGER IF EXISTS patients_LOG_trigger_ins;
+CREATE TRIGGER patients_LOG_trigger_ins BEFORE INSERT ON `SysMed`.`Patients`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES(concat('ADDED Patient: (', new.id, ') : ', NEW.name, ', ', NEW.lastname, ', ', new.pesel));
+
+DROP TRIGGER IF EXISTS patients_LOG_trigger_del;
+CREATE TRIGGER patients_LOG_trigger_del BEFORE DELETE ON `SysMed`.`Patients`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES(concat('DELETED Patient: (', old.id, ') : ', old.name, ', ', old.lastname, ', ', old.pesel));
+
+DROP TRIGGER IF EXISTS patients_LOG_trigger_upd;
+CREATE TRIGGER patients_LOG_trigger_upd BEFORE UPDATE ON `SysMed`.`Patients`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES(concat('DELETED Patient: (', old.id, ') : ', old.name, ', ', old.lastname, ', ', old.pesel, ' -> ', new.name, ', ', new.lastname, ', ', new.pesel));
+
+
+
+DROP TRIGGER IF EXISTS personaddr_LOG_trigger_ins;
+CREATE TRIGGER personaddr_LOG_trigger_ins BEFORE INSERT ON `SysMed`.`PersonAddress`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES(concat('ADDED Person addres for: ', new.id_patient, ' ', new.id_doctor, ' ', new.id_staff));
+
+DROP TRIGGER IF EXISTS personaddr_LOG_trigger_del;
+CREATE TRIGGER personaddr_LOG_trigger_del BEFORE DELETE ON `SysMed`.`PersonAddress`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES (concat('UPDATED Person addres for :', old.id_patient, ' ', old.id_doctor, ' ', old.id_staff));
+
+DROP TRIGGER IF EXISTS personaddr_LOG_trigger_upd;
+CREATE TRIGGER personaddr_LOG_trigger_upd BEFORE UPDATE ON `SysMed`.`PersonAddress`
+FOR EACH ROW INSERT INTO `SysMed`.`Logs`(`actions`)
+VALUES (concat('UPDATED Person addres for :', old.id_patient, ' ', old.id_doctor, ' ', old.id_staff));

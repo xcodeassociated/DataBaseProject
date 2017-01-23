@@ -166,8 +166,9 @@ void PatientRegistrationWindow::addExamToSystem(){
 
 void PatientRegistrationWindow::cleanExamRegUI(){
     this->ui->visiOther->clear();
-    this->ui->dateEdit->setDate(QDate::currentDate());
-    this->ui->timeEdit->setTime(QTime::currentTime());
+    std::cerr << "date: " << QDate::currentDate().toString("dd-MM-yyyy").toStdString() << "\n";
+    this->ui->dateEdit->setDate(QDate::fromString("dd-MM-yyyy", QDate::currentDate().toString("dd-MM-yyyy")));
+    this->ui->timeEdit->setTime(QTime::fromString("HH::mm::ss", QTime::currentTime().toString("HH::mm::ss")));
 }
 
 void PatientRegistrationWindow::editPatientInSystem(){
@@ -558,10 +559,17 @@ void PatientRegistrationWindow::fillExamsList(){
             patient p = this->vc->getPatient(std::get<0>(e));
             doctor_id d_id = std::get<1>(e);
             doctor d = this->vc->getDoctor(d_id);
-            std::string p_str = std::get<0>(p) + " " + std::get<1>(p) + " -> " + std::get<0>(d) + " " + std::get<1>(d);
+            std::stringstream p_ss;
+            p_ss << std::get<0>(p) << " "
+                 << std::get<1>(p) << " -> "
+                 << std::get<0>(d) << " "
+                 << std::get<1>(d) << " "
+                 << "\n    ( "
+                 << std::get<2>(e) << " - "
+                 << std::get<3>(e) << ")";
             QListWidgetItemBundle* item = new QListWidgetItemBundle;
             item->id = std::get<5>(e); //exam id
-            item->setText(QString(p_str.c_str()));
+            item->setText(QString(p_ss.str().c_str()));
             this->ui->patientList->addItem(item);
             this->examListElements.push_back(item);
         }
