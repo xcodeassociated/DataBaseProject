@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>ddba5920-3dc7-4bc1-9ea1-72987167e026.SCHEMA:SysMed</OriginalElement>
+  <nodes>
+    <node x="685.0" y="274.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamDate</node>
+    <node x="1056.0" y="274.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescription</node>
+    <node x="1842.0" y="274.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientMedicalInfo</node>
+    <node x="1448.0" y="519.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResultSymptoms</node>
+    <node x="272.0" y="230.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PersonAddress</node>
+    <node x="555.0" y="693.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.DoctorTitle</node>
+    <node x="0.0" y="693.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Logs</node>
+    <node x="257.0" y="693.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.StaffPosition</node>
+    <node x="1420.0" y="241.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResult</node>
+    <node x="646.75" y="0.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors</node>
+    <node x="1195.75" y="11.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients</node>
+    <node x="825.0" y="693.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.VIEW:SysMed.intgetxlikeyresult</node>
+    <node x="1025.0" y="508.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescriptionElement</node>
+    <node x="32.70227272727277" y="0.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Staff</node>
+    <node x="0.0" y="274.0">ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Login</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamDate" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors">
+      <point x="-87.75" y="-70.0" />
+      <point x="0.0" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PersonAddress" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Staff">
+      <point x="-131.0" y="-114.0" />
+      <point x="337.5" y="170.0" />
+      <point x="221.70227272727277" y="170.0" />
+      <point x="63.0" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamDate" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients">
+      <point x="87.75" y="-70.0" />
+      <point x="948.25" y="210.0" />
+      <point x="1265.35" y="210.0" />
+      <point x="-46.40000000000009" y="59.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PersonAddress" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors">
+      <point x="0.0" y="-114.0" />
+      <point x="468.5" y="190.0" />
+      <point x="722.35" y="190.0" />
+      <point x="-50.39999999999998" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescription" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors">
+      <point x="-85.25" y="-70.0" />
+      <point x="1141.25" y="190.0" />
+      <point x="823.1500000000001" y="190.0" />
+      <point x="50.40000000000009" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResult" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors">
+      <point x="-100.5" y="-103.0" />
+      <point x="1520.5" y="180.0" />
+      <point x="873.5500000000001" y="180.0" />
+      <point x="100.80000000000007" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PersonAddress" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients">
+      <point x="131.0" y="-114.0" />
+      <point x="599.5" y="200.0" />
+      <point x="1218.95" y="200.0" />
+      <point x="-92.79999999999995" y="59.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Login" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Doctors">
+      <point x="63.0" y="-70.0" />
+      <point x="189.0" y="180.0" />
+      <point x="671.95" y="180.0" />
+      <point x="-100.79999999999995" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientMedicalInfo" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients">
+      <point x="0.0" y="-70.0" />
+      <point x="1999.5" y="160.0" />
+      <point x="1404.55" y="160.0" />
+      <point x="92.79999999999995" y="59.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResultSymptoms" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResult">
+      <point x="0.0" y="-59.0" />
+      <point x="0.0" y="103.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Login" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Staff">
+      <point x="-63.0" y="-70.0" />
+      <point x="63.0" y="210.0" />
+      <point x="95.70227272727277" y="210.0" />
+      <point x="-63.0" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescriptionElement" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescription">
+      <point x="0.0" y="-70.0" />
+      <point x="0.0" y="70.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientPrescription" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients">
+      <point x="85.25" y="-70.0" />
+      <point x="0.0" y="59.0" />
+    </edge>
+    <edge source="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.PatientExamResult" target="ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Patients">
+      <point x="100.5" y="-103.0" />
+      <point x="1721.5" y="170.0" />
+      <point x="1358.15" y="170.0" />
+      <point x="46.40000000000009" y="59.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4846118511713367" x="1078.5" y="315.0521327014218" />
+  <SelectedNodes>
+    <node>ddba5920-3dc7-4bc1-9ea1-72987167e026.TABLE:SysMed.Login</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
