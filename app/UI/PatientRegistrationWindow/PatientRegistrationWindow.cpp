@@ -442,9 +442,9 @@ void PatientRegistrationWindow::searchFieldChanged(const QString& text){
     auto sb = this->ui->sortByCombo->currentText().toStdString();
     bool desc = this->ui->DESC->isChecked();
     QuerySort qs = (desc) ? QuerySort::DESC : QuerySort::ASC;
+    std::string query = (!text.toStdString().empty()) ? text.toStdString() : "all";
 
-
-    std::cerr << "Search filed changed: " << text.toStdString() << " sb: " << sb << " desc: " << desc << "\n";
+    std::cerr << "Search filed changed: " << query << " sb: " << sb << " desc: " << desc << "\n";
 
     if (this->currentTab == CurrentTab::P_REG_TAB || this->currentTab == CurrentTab::P_EDIT_TAB) {
         PatientQueryOrder pqo;
@@ -458,7 +458,7 @@ void PatientRegistrationWindow::searchFieldChanged(const QString& text){
 
         this->cleanLeftList();
 
-        this->updatePatients(text.toStdString(), pqo, qs);
+        this->updatePatients(query, pqo, qs);
 
         this->fillPatientsList();
     }else{
@@ -472,8 +472,7 @@ void PatientRegistrationWindow::searchFieldChanged(const QString& text){
             peqo = PExamsQueryOrder::Date;
 
         this->cleanLeftList();
-
-        this->updateExams(text.toStdString(), peqo, qs);
+        this->updateExams(query, peqo, qs);
 
         this->fillExamsList();
     }
@@ -513,17 +512,20 @@ void PatientRegistrationWindow::cleanSelectors(){
 }
 
 void PatientRegistrationWindow::updatePatients(){
-    std::string query = "all";
-    this->patients = this->vc->getPatients(query, PatientQueryOrder::Name, QuerySort::ASC);
+    //std::string query = "all";
+    //this->patients = this->vc->getPatients(query, PatientQueryOrder::Name, QuerySort::ASC);
+    this->searchFieldChanged(this->ui->searchField->text());
 }
 
 void PatientRegistrationWindow::updatePatients(std::string query, PatientQueryOrder pqo, QuerySort qs){
+    std::cerr << (int)pqo << " " << (int)qs << std::endl;
     this->patients = this->vc->getPatients(query, pqo, qs);
 }
 
 void PatientRegistrationWindow::updateExams(){
-    std::string query = "all";
-    this->exams = this->vc->getExams(query, PExamsQueryOrder::ID, QuerySort::ASC);
+    //std::string query = "all";
+    //this->exams = this->vc->getExams(query, PExamsQueryOrder::ID, QuerySort::ASC);
+    this->searchFieldChanged(this->ui->searchField->text());
 }
 
 void PatientRegistrationWindow::updateExams(std::string query, PExamsQueryOrder peq, QuerySort qs){

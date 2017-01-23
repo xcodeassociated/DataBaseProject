@@ -5,9 +5,9 @@
 #include "LoginModel.hpp"
 
 void LoginModel::update_data() {
-    this->update_patients();
+    this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
     this->update_staff();
-    this->update_pexams();
+    this->update_pexams(PExamsQueryOrder::ID, QuerySort::ASC);
     this->update_pmedrecords();
     this->update_pprescriptions();
     this->update_pexamresults();

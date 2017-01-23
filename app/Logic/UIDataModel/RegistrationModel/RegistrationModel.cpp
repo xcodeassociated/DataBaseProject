@@ -5,9 +5,9 @@
 #include "RegistrationModel.hpp"
 
 void RegistrationModel::update_data() {
-    this->update_patients();
+    this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
     this->update_staff();
-    this->update_pexams();
+    this->update_pexams(PExamsQueryOrder::ID, QuerySort::ASC);
     this->update_pmedrecords();
     this->update_pprescriptions();
     this->update_pexamresults();
@@ -89,7 +89,7 @@ bool RegistrationModel::addPatient(patient& p, patient_medinfo_reg& data){
         
         this->commit_transaction();
         
-        this->update_patients();
+        this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
         this->update_pmedrecords();
         
     }catch (sql::SQLException &e){
@@ -127,7 +127,7 @@ bool RegistrationModel::addPatientExam(patient_id& p, patient_exam_reg& data){
     
         this->commit_transaction();
   
-        this->update_pexams();
+        this->update_pexams(PExamsQueryOrder::ID, QuerySort::ASC);
         
     }catch (sql::SQLException &e){
         std::cerr << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
@@ -189,7 +189,7 @@ bool RegistrationModel::deleteExam(exam_id& e_id){
         
         this->commit_transaction();
         
-        this->update_pexams();
+        this->update_pexams(PExamsQueryOrder::ID, QuerySort::ASC);
         
     }catch (sql::SQLException &e){
         std::cerr << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
@@ -231,7 +231,7 @@ bool RegistrationModel::editPatientExam(patient_id& p, patient_exam_reg& data, s
         
         this->commit_transaction();
         
-        this->update_pexams();
+        this->update_pexams(PExamsQueryOrder::ID, QuerySort::ASC);
         
     }catch (sql::SQLException &e){
         std::cerr << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
@@ -329,7 +329,7 @@ bool RegistrationModel::editPatient(patient& p, patient_medinfo_reg& data){
         
         this->commit_transaction();
         
-        this->update_patients();
+        this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
         this->update_pmedrecords();
         
     }catch (sql::SQLException &e){
