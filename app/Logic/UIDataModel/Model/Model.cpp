@@ -213,7 +213,26 @@ std::pair< Model::QueryParserExams::QueryTypeExams, std::string> Model::QueryPar
     return result;
 };
 
-std::string Model::QueryParserExams::parsePatientQueryOrder(PExamsQueryOrder peqo){
+std::string Model::QueryParserExams::parsExamQueryOrderSearch(PExamsQueryOrder peqo){
+    std::string result{};
+    switch (peqo){
+        case PExamsQueryOrder::Date:
+            result = "exam_date";
+            break;
+        case PExamsQueryOrder::Patient:
+            result = "pid";
+            break;
+        case PExamsQueryOrder::Doctor:
+            result = "did";
+            break;
+        case PExamsQueryOrder::ID:
+            result = "exam_date";
+            break;
+    }
+    return result;
+}
+
+std::string Model::QueryParserExams::parsExamQueryOrder(PExamsQueryOrder peqo){
     std::string result{};
     switch (peqo){
         case PExamsQueryOrder::Date:
@@ -223,13 +242,12 @@ std::string Model::QueryParserExams::parsePatientQueryOrder(PExamsQueryOrder peq
             result = "id_patient";
             break;
         case PExamsQueryOrder::Doctor:
-            result = "DoctorID";
+            result = "id_doctor";
             break;
         case PExamsQueryOrder::ID:
             result = "id_patient_exam";
             break;
     }
-    std::cerr << "333: " << result;
     return result;
 }
 
@@ -250,8 +268,6 @@ std::tuple<std::string, std::string, Model::QueryParserOperant::QueryOperant> Mo
     }else
         qo = QueryOperant::NONE;
 
-    if (it == q.end()) std::cerr << "^^^^^^^^^^^^^";
-
     std::copy(q.begin(), it, std::back_inserter(t1));
 
     if (qo == QueryOperant::NONE)
@@ -266,7 +282,6 @@ std::tuple<std::string, std::string, Model::QueryParserOperant::QueryOperant> Mo
 
 
 void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort qs){
-    std::cerr << "dupa@@@\n";
 
     if (query.length() < 5) {
         this->update_patients(pqo, qs);
@@ -277,8 +292,8 @@ void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort
         this->update_pexamresults();
         return;
     }
-    std::cerr << "999999999999999999\n";
 
+    this->patients.clear();
 
     sql::PreparedStatement *stmt = nullptr;
     sql::ResultSet *res = nullptr;
@@ -296,10 +311,7 @@ void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort
         if (parsed.first == Model::QTypePatient::NONE)
             return;
 
-        std::cerr << "8888888888888: \n";
         std::string ask = parsed.second;
-
-        this->patients.clear();
 
         stmt = this->connection->prepareStatement("set @query = (?)");
         stmt->setString(1, ask);
@@ -368,8 +380,6 @@ void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort
         std::string ask2 = parsed2.second;
 
         std::cerr << "ask: " << ask << " ask2: " << ask2 << std::endl;
-
-        this->patients.clear();
 
         stmt = this->connection->prepareStatement("set @query = (?)");
         stmt->setString(1, ask);
@@ -449,8 +459,6 @@ void Model::update_patients(std::string& query, PatientQueryOrder pqo, QuerySort
         std::string ask2 = parsed2.second;
 
         std::cerr << "ask: " << ask << " ask2: " << ask2 << std::endl;
-
-        this->patients.clear();
 
         stmt = this->connection->prepareStatement("set @query = (?)");
         stmt->setString(1, ask);
@@ -699,7 +707,8 @@ void Model::update_pmedrecords() {
     }
 }
 
-void Model::update_pexams(PExamsQueryOrder peqo , QuerySort qs){ std::cerr << "tttttt\n";
+void Model::update_pexams(PExamsQueryOrder peqo , QuerySort qs){
+    std::cerr << "tttttt!!!!\n";
     this->pExams.clear();
 
     std::size_t p_id;
@@ -712,43 +721,33 @@ void Model::update_pexams(PExamsQueryOrder peqo , QuerySort qs){ std::cerr << "t
     sql::PreparedStatement *stmt = nullptr;
     sql::ResultSet *res = nullptr;
 
-    std::string peqo_value = Model::QueryParserExams::parsePatientQueryOrder(peqo);
+    std::string peqo_value = Model::QueryParserExams::parsExamQueryOrder(peqo);
+    if (peqo_value == "") //????!!!!! why it crashe without it?
+        peqo_value = "id_patient_exam";
+
     std::cerr << "\npeqo: " << peqo_value << "\n";
 
+    std::stringstream ss{};
+    ss << "SELECT "
+            "`id_patient_exam` as `ID`, "
+            "`id_patient` as `PatientID`,"
+            "`id_doctor` as `DoctorID`, "
+            "cast(`exam_date` as date) as `ExamDate`, "
+            "cast(`exam_date` as time) as `ExamTime`, "
+            "`other_examdate_info` as `Other`"
+            "FROM `SysMed`.`PatientExamDate`"
+            "ORDER BY ";
+    ss << peqo_value << " ";
 
     switch (qs){
         case QuerySort::ASC:
-            stmt = this->connection->prepareStatement(
-                    "SELECT "
-                            "`id_patient_exam` as `ID`, "
-                            "`id_patient` as `PatientID`,"
-                            "`id_doctor` as `DoctorID`, "
-                            "cast(`exam_date` as date) as `ExamDate`, "
-                            "cast(`exam_date` as time) as `ExamTime`, "
-                            "`other_examdate_info` as `Other`"
-                            "FROM `SysMed`.`PatientExamDate`"
-                            "ORDER BY (?) "
-                            " ASC"
-            );
+            ss << " ASC";
             break;
         case QuerySort::DESC:
-            stmt = this->connection->prepareStatement(
-                    "SELECT "
-                            "`id_patient_exam` as `ID`, "
-                            "`id_patient` as `PatientID`,"
-                            "`id_doctor` as `DoctorID`, "
-                            "cast(`exam_date` as date) as `ExamDate`, "
-                            "cast(`exam_date` as time) as `ExamTime`, "
-                            "`other_examdate_info` as `Other`"
-                            "FROM `SysMed`.`PatientExamDate`"
-                            "ORDER BY (?) "
-                            " DESC "
-            );
+            ss << " DESC";
             break;
     }
-
-    stmt->setString(1, peqo_value);
-
+    stmt = this->connection->prepareStatement(ss.str());
 
     res = stmt->executeQuery();
     while (res->next()) {
@@ -774,9 +773,155 @@ void Model::update_pexams(PExamsQueryOrder peqo , QuerySort qs){ std::cerr << "t
 }
 
 void Model::update_pexams(std::string& query, PExamsQueryOrder peqo , QuerySort qs) {
-    std::cerr << "uuuuu\n";
-    this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
 
+    if (query.length() < 6) {
+        this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
+        this->update_pexams(peqo, qs);
+        return;
+    }
+
+    this->update_patients(PatientQueryOrder::Id, QuerySort::ASC);
+    this->pExams.clear();
+
+    sql::PreparedStatement *stmt = nullptr;
+    sql::ResultSet *res = nullptr;
+
+    std::string peqo_value = Model::QueryParserExams::parsExamQueryOrderSearch(peqo);
+    unsigned qs_value = static_cast<unsigned>(qs);
+
+    auto t = Model::QueryParserOperant::parseQueryOperant(query);
+
+    if (std::get<2>(t) == QueryParserOperant::QueryOperant::NONE) {
+        auto parsed = Model::QueryParserExams::parse(std::get<0>(t));
+        std::cerr << "q: " << query << "? : " << std::get<0>(t) << std::endl;
+        std::cerr << "parsed: " << (int)parsed.first << " ask: " << parsed.second  << " peqo: " << peqo_value << " qs: " << qs_value << std::endl;
+
+        if (parsed.first == Model::QTypeExam::NONE)
+            return;
+
+        std::string ask = parsed.second;
+        std::string ask2 = "";
+
+        std::string query = "", query2 = "", f = "", f2 = "";
+
+        if (parsed.first == QTypeExam::PATIENT) {
+            query = ask;
+            query2 = ask2;
+            f = "pname";
+            f2 = "";
+        }else if (parsed.first == QTypeExam::PATIENT_NAME_ONLY) {
+            query = ask;
+            query2 = ask2;
+            f = "!pname";
+            f2 = "";
+        }else if (parsed.first == QTypeExam::PATIENT_LASTNAME_ONLY) {
+            query = ask;
+            query2 = ask2;
+            f = "plastname";
+            f2 = "";
+        }else if (parsed.first == QTypeExam::PATIENT_PESEL) {
+            query = ask;
+            query2 = ask2;
+            f = "pesel";
+            f2 = "";
+        }else if (parsed.first == QTypeExam::DOCTOR) {
+            query = ask2;
+            query2 = ask;
+            f = "";
+            f2 = "dname";
+        }else if (parsed.first == QTypeExam::DOCTOR_LASTNAME_ONLY) {
+            query = ask2;
+            query2 = ask;
+            f = "";
+            f2 = "dlastname";
+        }else if (parsed.first == QTypeExam::DOCTOR_NAME_ONLY) {
+            query = ask2;
+            query2 = ask;
+            f = "";
+            f2 = "!dname";
+        }else {
+        }
+
+        std::cerr << ">> q: " << query << " q2: " << query2 << " f: " << f << " f2: " << f2 << "\n";
+
+        stmt = this->connection->prepareStatement("set @query = (?)");
+        stmt->setString(1, query);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("set @query2 = (?)");
+        stmt->setString(1, query2);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("set @f = (?)");
+        stmt->setString(1, f);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("set @f2 = (?)");
+        stmt->setString(1, f2);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("set @order = (?)");
+        stmt->setString(1, peqo_value);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("set @p = (?)");
+        stmt->setInt(1, qs_value);
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement("call find_exam(@query, @f, @query2, @f2, @order, @p);");
+        res = stmt->executeQuery();
+        delete res;
+        delete stmt;
+
+        stmt = this->connection->prepareStatement(
+                "select `id_patient_exam` as `ID`,\n"
+                        "  `pid` as `PatientID`,\n"
+                        "  `did` as `DoctorID`,\n"
+                        "  cast(`exam_date` as date) as `ExamDate`,\n"
+                        "  cast(`exam_date` as time) as `ExamTime`,\n"
+                        "  `other_examdate_info` as `Other`\n"
+                        "from texam6;"
+        );
+
+    }else if (std::get<2>(t) == QueryParserOperant::QueryOperant::AND){
+
+    }else{
+
+    }
+
+
+    res = stmt->executeQuery();
+    while (res->next()) {
+        std::cerr << "...\n";
+        std::size_t p_id = static_cast<std::size_t>(res->getInt("PatientID"));
+        std::size_t exam_id = static_cast<std::size_t>(res->getInt("ID"));
+        std::size_t doctor_id = static_cast<std::size_t>(res->getInt("DoctorID"));
+        std::string date = res->getString("ExamDate");
+        std::string time = res->getString("ExamTime");
+        std::string other = res->getString("Other");
+
+        PatientExamDate ped{exam_id, p_id, doctor_id, date, time, other};
+        if (std::find_if(this->patients.begin(), this->patients.end(), [p_id](const auto& e){
+            return p_id == e.id;
+        }) != this->patients.end()) {
+            this->pExams.push_back(ped);
+        }
+    }
+    std::cerr << "ZZZZ: " << this->pExams.size() << "\n";
+    delete stmt;
+    delete res;
 
 }
 
@@ -890,9 +1035,10 @@ doctor Model::getDoctor(doctor_id& d_id){
 
 std::vector<exam> Model::getExams(std::string& query, PExamsQueryOrder peqo, QuerySort qs){
     std::cerr << "q: " << query << " " << (int)peqo << " " << (int)qs << std::endl;
-    if (query == "all")
+    if (query == "all") {
+        this->update_pexams(peqo, qs);
         return this->pExams;
-
+    }
     this->update_pexams(query, peqo, qs);
     return this->pExams;
 }

@@ -10,7 +10,7 @@ PatientRegistrationWindow::PatientRegistrationWindow(QWidget *parent) :
     this->currentTab = static_cast<CurrentTab>(this->ui->tabWidget->currentIndex());
     connect(this->ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChange()));
     
-    connect(this->ui->patientList, SIGNAL(itemSelectionChanged()), this, SLOT(selectPatientInList()));
+    connect(this->ui->patientList, SIGNAL(itemSelectionChanged()), this, SLOT(selecElementInList()));
     
     connect(this->ui->searchField, SIGNAL(textChanged(const QString &)), this, SLOT(searchFieldChanged(const QString &)));
     
@@ -376,7 +376,7 @@ void PatientRegistrationWindow::cleanExamEditUI(){
     this->current_editing_patient = -1;
 }
 
-void PatientRegistrationWindow::selectPatientInList(){
+void PatientRegistrationWindow::selecElementInList(){
     if( this->ui->patientList->selectedItems().empty())
         return;
     
@@ -427,6 +427,10 @@ void PatientRegistrationWindow::selectPatientInList(){
         });
         
         this->ui->visiOther_2->document()->setPlainText({std::get<4>(e).c_str()});
+
+        //TODO: doesn't work...
+        this->ui->dateEdit_2->setDate(QDate::fromString(std::get<2>(e).c_str(), "dd.MM.yyyy"));
+        this->ui->timeEdit_2->setTime(QTime::fromString(std::get<3>(e).c_str(), "HH.mm"));
     }
 }
 
@@ -471,7 +475,7 @@ void PatientRegistrationWindow::searchFieldChanged(const QString& text){
         else if (sb == "termin")
             peqo = PExamsQueryOrder::Date;
 
-        this->cleanLeftList();
+        this->cleanLeftList(); std::cerr << "BBBB\n";
         this->updateExams(query, peqo, qs);
 
         this->fillExamsList();

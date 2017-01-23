@@ -88,7 +88,7 @@ private Q_SLOTS:
     void editExamInSystem();
     void deleteExam();
     
-    void selectPatientInList();
+    void selecElementInList();
     
     void searchFieldChanged(const QString&);
     void sortByChanged(int);

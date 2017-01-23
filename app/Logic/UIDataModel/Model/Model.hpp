@@ -63,7 +63,9 @@ class Model {
 
         static std::pair<QueryTypeExams, std::string> parse(std::string);
 
-        static std::string parsePatientQueryOrder(PExamsQueryOrder);
+        static std::string parsExamQueryOrderSearch(PExamsQueryOrder);
+        static std::string parsExamQueryOrder(PExamsQueryOrder);
+
     };
 
     using QTypeExam = QueryParserExams::QueryTypeExams;
